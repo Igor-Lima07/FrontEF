@@ -123,11 +123,6 @@
 
     </nav>
 </div>
-    <div id="configContainer">
-        <button id="toggleTheme" class="toggle-theme-btn">
-            <i class="bi bi-sun"></i>
-        </button>
-    </div>
     <div class="ProdutosT">
         <b>Produtos</b>
     </div>
@@ -149,13 +144,17 @@
         Aguardando ação<span class="pontinhos">...</span>
     </div>
     
-    <form class="infoProdutosContainer" id="addDivProdutos">
+    <form class="infoProdutosContainer" id="addDivProdutos" method="post" action="{% url 'addProdutos' %}">
+        {% csrf_token %}
         <div class="inputGroup">
                 <div class="inputGroup2">
                         <label>Produto</label> <input type="text" name="nomeProduto">
                 </div>
                 <div class="inputGroup2">
                         <label>Quantidade Cx</label> <input type="number" name="qntCxProduto">
+                </div>
+                <div class="inputGroup2">
+                    <label>Produtos P/Cx</label> <input type="number" name="qntPCxProduto">
                 </div>
                 <div class="inputGroup2">
                         <label>Lote</label> <input type="text" name="loteProduto">
@@ -179,6 +178,9 @@
                         <label>Quantidade Cx</label> <input type="number" name="qntCxProduto">
                 </div>
                 <div class="inputGroup2">
+                    <label>Produtos P/Cx</label> <input type="number" name="qntPCxProduto">
+                </div>
+                <div class="inputGroup2">
                         <label>Lote</label> <input type="text" name="loteProduto">
                 </div>
                 <div class="inputGroup2">
@@ -187,8 +189,11 @@
                 <div class="inputGroup2">
                         <label>Dt Validade</label> <input type="date" name="dataValProduto">
                 </div>
+                
         </div>
         <button class="btnProduto" id="searchButton" type="submit">Pesquisar</button>
     </form>
+
+    
 </body>
 </html>
