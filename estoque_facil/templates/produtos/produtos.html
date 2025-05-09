@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos</title>
-    <link rel="stylesheet" href="{% static 'css/style_produtos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style_produtos2.css' %}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="{% static 'js/produtos.js' %}" defer></script>
     <script src="{% static 'js/tema.js' %}" defer></script>
@@ -169,6 +169,39 @@
         <button class="btnProduto" id="addButton" type="submit">Adicionar</button>
     </form>
 
+    <div class="addAcaoContainer" id="infoAcaoContainer">
+        <div class="displayGroup">
+            {% for produto in produtos %}
+                <div class="displayGroup2">
+                    <label>Produto</label>
+                    <button class="displayBtns">{{ tarefa.nomeProduto|default:"Sem Nome" }}</button>
+                </div>
+                <div class="displayGroup2">
+                    <label>Lote</label>
+                    <button class="displayBtns">{{ tarefa.loteProduto|default:"Sem Lote" }}</button>
+                </div>
+                <div class="displayGroup2">
+                    <label>Qnt Cx</label>
+                    <button class="displayBtns">{{ tarefa.qntCxProduto|default:"Sem Qnt Caixas" }}</button>
+                </div>
+                <div class="displayGroup2">
+                    <label>Produtos/Cx</label>
+                    <button class="displayBtns">{{ tarefa.qntProdutoCx|default:"Sem Produtos/Cx" }}</button>
+                </div>
+                <div class="displayGroup2">
+                    <label>Dt Fabricação</label>
+                    <button class="displayBtns">{{ tarefa.dataFabProduto|default:"Sem Dt Fab" }}</button>
+                </div>
+                <div class="displayGroup2">
+                    <label>Dt Validade</label>
+                    <button class="displayBtns">{{ tarefa.dataValProduto|default:"Sem Dt Val" }}</button>
+                </div>
+            {% empty %}
+                <p>Nenhum produto encontrado.</p>
+            {% endfor %}
+        </div>
+    </div>
+
     <form class="infoProdutosContainer" id="searchDivProdutos">
         <div class="inputGroup">
                 <div class="inputGroup2">
@@ -193,6 +226,7 @@
         </div>
         <button class="btnProduto" id="searchButton" type="submit">Pesquisar</button>
     </form>
+
 
     
 </body>

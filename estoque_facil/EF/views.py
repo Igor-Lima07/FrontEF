@@ -98,4 +98,16 @@ def listAcao_view(request):
         tarefa_data['id'] = tarefa.id
         tarefas_list.append(tarefa_data)
 
-    return render(request, 'estabelecer_acao/estabelecer_acao.html', {'tarefas': tarefas_list})
+
+def listProdutos_view(request):
+    db = initialize_firebase()
+    produtos_ref = db.collection('produtos')
+    produtos = produtos_ref.stream()
+
+    produtos_list = []
+    for produto in produtos:
+        produto_data = produto.to_dict()
+        produto_data['id'] = produto.id
+        produtos_list.append(produto_data)
+
+    return render(request, 'produtos/produtos.html', {'produtos': produtos_list})

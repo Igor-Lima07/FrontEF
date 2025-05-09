@@ -355,7 +355,7 @@ ul li.LinhasM {
     height: 500px;
     margin-left: 350px;
     margin-top: 40px;
-    width: 71%;
+    width: 75%;
     flex-direction: row;
     background-color: white;
     border-radius: 20px;
@@ -363,6 +363,26 @@ ul li.LinhasM {
     font-weight: bolder;
     font-size: 10vh;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.addAcaoContainer{
+    font-family: "Poppins", sans-serif;
+    align-items: center;
+    display: flex;
+    padding: 30px;
+    padding-bottom: 50px;
+    height: auto;
+    margin-left: 350px;
+    margin-top: 40px;
+    width: 75%;
+    flex-direction: row;
+    background-color: white;
+    border-radius: 20px;
+    justify-content: center;
+    font-weight: bolder;
+    font-size: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 /* muda o para o display para none depois de terminar, NAO ESQUECE */
@@ -425,6 +445,24 @@ ul li.LinhasM {
     text-align: center;
     font-size: 15px;
 
+}
+
+.displayGroup2 {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: calc(20% - 15px); 
+}
+
+.displayBtns {
+    width: 100%;
+    height: 7vh;
+    padding: 5px;
+    border: none;
+    background-color: #F1F0FF;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
 }
 
 #addButton{
