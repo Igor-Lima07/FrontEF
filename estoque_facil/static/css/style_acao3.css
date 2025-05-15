@@ -7,7 +7,7 @@
     --hover-light: #0E00AE; /* Interagiveis do tema claro */
     --lines-light: #000000; /* Linhas do tema claro */
     }
-  
+ 
 [data-theme="dark"] {
     --body-dark: #2F2E2E; /* Fundo do tema escuro */
     --text-dark: #ffffff; /* Texto do tema escuro */
@@ -22,39 +22,39 @@
     color: var(--text-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
     }
-  
+ 
 [data-theme="dark"] header {
     background-color: var(--header-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
     }
-  
+ 
 [data-theme="dark"] nav.menu-lateral {
     background-color: var(--header-dark);
     box-shadow: 2px 0 0 var(--lines-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
     }
-  
+ 
 [data-theme="dark"] ul li.item-menu {
     color: var(--text-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
     }
-  
+ 
 [data-theme="dark"] ul li.item-menu a {
     color: var(--text-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
     }
-  
+ 
 [data-theme="dark"] ul li.item-menu:hover {
     background-color: var(--hover-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
     }
-  
+ 
 [data-theme="dark"] ul li.item-menu a:hover {
     color: var(--header-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    [data-theme="dark"] .EstabelecerT{
+[data-theme="dark"] .EstabelecerT{
     color: var(--hover-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
     }
@@ -84,6 +84,24 @@
     }
 
 [data-theme="dark"] .btnBase:hover {
+        background-color: var(--hover-dark);
+    }
+
+[data-theme="dark"] .btnDelete {
+        background-color: var(--button-dark);
+        box-shadow: 0px 6px 3px var(--body-dark);
+    }
+
+[data-theme="dark"] .btnDelete:hover {
+        background-color: var(--hover-dark);
+    }
+
+[data-theme="dark"] .btnEdit {
+        background-color: var(--button-dark);
+        box-shadow: 0px 6px 3px var(--body-dark);
+    }
+
+[data-theme="dark"] .btnEdit:hover {
         background-color: var(--hover-dark);
     }
 
@@ -191,23 +209,23 @@ ul li.LinhasM {
 }
 
 .bi-bell {
-        position: absolute; 
+        position: absolute;
         top: 10px;            
-        right: 10px;           
+        right: 10px;          
         font-size: 32px;
-        color: #000000;   
+        color: #000000;  
       }
 .bi-gear {
-    position: absolute; 
+    position: absolute;
     top: 10px;            
-    right: 58px;           
+    right: 58px;          
     font-size:32px;
     color: #000000
-}     
+}    
 .bi-printer {
-    position: absolute; 
+    position: absolute;
     top: 10px;            
-    right: 108px;           
+    right: 108px;          
     font-size: 32px;
     color: #000000;
 }
@@ -300,6 +318,50 @@ img {
     background-color: #90a8ff ;
 }
 
+.btnDelete{
+    display: none;
+    gap: 5px;
+    border: none;
+    background-color: #e1deff;
+    box-shadow: 0px 6px 3px #bab9c5;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: 0.3s ease;
+    border-radius: 100px;
+    font-weight: bolder;
+    font-size: 30px;
+    padding: 5px;
+    padding-right: 13px;
+    padding-left: 13px;
+    margin-top: 20px;
+}
+
+.btnDelete:hover{
+    background-color: #90a8ff ;
+}
+
+.btnEdit{
+    display: none;
+    gap: 5px;
+    border: none;
+    background-color: #e1deff;
+    box-shadow: 0px 6px 3px #bab9c5;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: 0.3s ease;
+    border-radius: 100px;
+    font-weight: bolder;
+    font-size: 30px;
+    padding: 5px;
+    padding-right: 13px;
+    padding-left: 13px;
+    margin-top: 20px;
+}
+
+.btnEdit:hover{
+    background-color: #90a8ff ;
+}
+
 
 .bi-plus{
     padding: 0;
@@ -325,16 +387,18 @@ img {
 
 .displayGroup {
     display: flex;
-    flex-wrap: wrap; 
-    gap: 15px; 
-    margin-right: 38vh;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-right: 50vh;
+    align-items: center;
+    width: 150vh;
 }
 
 .displayGroup2 {
     display: flex;
     flex-direction: column;
     text-align: center;
-    width: calc(20% - 15px); 
+    width: calc(18.8% - 15px);
 }
 
 .displayBtns {
@@ -371,4 +435,10 @@ img {
     padding: 5px;
     padding-right: 13px;
     padding-left: 13px;
+}
+
+.formDelete {
+    display: flex;
+    flex-direction: row;
+    margin-right: 5px;
 }

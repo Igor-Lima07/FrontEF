@@ -4,6 +4,7 @@ import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import credentials
 from django.conf import settings
+from django.views.decorators.http import require_POST
 
 # Isso aqui é o que tá inicializando o firebase, NAO MEXE
 def initialize_firebase():
@@ -58,9 +59,9 @@ def addProdutos(request):
             "qtd_produtoPCx": qtd_produtoPCx
         })
 
-        print("Produto cadastrado com sucesso!")  # Isso vai para o console
+        print("Produto cadastrado com sucesso!")  
 
-        return redirect('produtos')  # Isso redireciona o usuário de volta para a página
+        return redirect('produtos')  
     else:
         return JsonResponse({"erro": "Método não permitido"}, status=405)
 
@@ -151,6 +152,18 @@ def listFuncionarios_view(request):
 
     return render(request, 'funcionarios/funcionarios.html', {'funcionarios': funcionarios_list})
 
+@require_POST
+def delete_acao(request):
+    db = initialize_firebase()
+    print("DELETE ACIONADO")
+    tarefa_id = request.POST.get('id')
+    print("ID recebido:", tarefa_id)
+    if tarefa_id:
+        db.collection('tarefas').document(tarefa_id).delete()
+        print("Documento deletado")
+    else:
+        print("Nenhum ID recebido")
+    return redirect('estabelecer_acao')
 
 def home(request):
     return render(request,'funcionarios/funcionarios.html')
