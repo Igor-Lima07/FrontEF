@@ -257,9 +257,9 @@ img {
     padding: 30px;
     padding-bottom: 50px;
     height: auto;
-    margin-left: 24%;
+    margin-left: 15%;
     margin-top: 40px;
-    width: 75%;
+    width: 78%;
     flex-direction: row;
     background-color: white;
     border-radius: 20px;
@@ -389,7 +389,7 @@ img {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-right: 50vh;
+    margin-right: 25vh;
     align-items: center;
     width: 150vh;
 }

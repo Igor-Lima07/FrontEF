@@ -115,6 +115,33 @@
         transition: background-color 0.3s ease, color 0.3s ease;
     }
 
+    [data-theme="dark"] .btnBase {
+        background-color: var(--button-dark);
+        box-shadow: 0px 6px 3px var(--body-dark);
+    }
+
+    [data-theme="dark"] .btnBase:hover {
+        background-color: var(--hover-dark);
+    }
+
+    [data-theme="dark"] .btnDelete {
+        background-color: var(--button-dark);
+        box-shadow: 0px 6px 3px var(--body-dark);
+    }
+
+    [data-theme="dark"] .btnDelete:hover {
+        background-color: var(--hover-dark);
+    }
+
+    [data-theme="dark"] .btnEdit {
+        background-color: var(--button-dark);
+        box-shadow: 0px 6px 3px var(--body-dark);
+    }
+
+    [data-theme="dark"] .btnEdit:hover {
+        background-color: var(--hover-dark);
+    }
+
 *{
     padding: 0;
     margin: 0;
@@ -333,9 +360,10 @@ ul li.LinhasM {
     display: flex;
     padding: 10px;
     height: 80px;
-    margin-left: 350px;
+    margin-left: 400px;
     margin-top: 0px;
     width: 71%;
+    gap: 25px;
     flex-direction: row;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -367,9 +395,9 @@ ul li.LinhasM {
     display: flex;
     padding: 10px;
     height: 500px;
-    margin-left: 24%;
+    margin-left: 15%;
     margin-top: 40px;
-    width: 75%;
+    width: 78%;
     flex-direction: row;
     background-color: white;
     border-radius: 20px;
@@ -388,7 +416,7 @@ ul li.LinhasM {
     height: auto;
     margin-left: 24%;
     margin-top: 40px;
-    width: 75%;
+    width: 71%;
     flex-direction: row;
     background-color: white;
     border-radius: 20px;
@@ -465,7 +493,9 @@ ul li.LinhasM {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-right: 38vh;
+    margin-right: 28vh;
+    align-items: center;
+    width: 150vh;
 }
 
 .displayGroup2 {
@@ -473,7 +503,7 @@ ul li.LinhasM {
     flex-direction: column;
     justify-content: space-between;
     text-align: center;
-    width: calc(16.6% - 15px); 
+    width: calc(16% - 15px); 
     box-sizing: border-box;
 }
 
@@ -554,6 +584,7 @@ ul li.LinhasM {
     transition: 0.3s ease;
 }
 
+
 .btnBase:hover{
     background-color: #90a8ff ;
 }
@@ -565,9 +596,9 @@ ul li.LinhasM {
     padding: 30px;
     padding-bottom: 50px;
     height: auto;
-    margin-left: 24%;
+    margin-left: 15%;
     margin-top: 40px;
-    width: 75%;
+    width: 78%;
     flex-direction: row;
     background-color: white;
     border-radius: 20px;
@@ -583,4 +614,78 @@ ul li.LinhasM {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+}
+
+.btnDelete{
+    display: none;
+    gap: 5px;
+    border: none;
+    background-color: #e1deff;
+    box-shadow: 0px 6px 3px #bab9c5;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: 0.3s ease;
+    border-radius: 100px;
+    font-weight: bolder;
+    font-size: 30px;
+    padding-right: 13px;
+    padding-left: 13px;
+    margin-top: 20px;
+}
+
+.btnDelete:hover{
+    background-color: #90a8ff ;
+}
+
+.btnEdit{
+    display: none;
+    gap: 5px;
+    border: none;
+    background-color: #e1deff;
+    box-shadow: 0px 6px 3px #bab9c5;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: 0.3s ease;
+    border-radius: 100px;
+    font-weight: bolder;
+    font-size: 30px;
+    padding: 5px;
+    padding-right: 13px;
+    padding-left: 13px;
+    margin-top: 20px;
+}
+
+.btnEdit:hover{
+    background-color: #90a8ff ;
+}
+
+.infoEditTools{
+    display: flex;
+    flex-direction: row;
+    margin-right: 180vh;
+    gap: 5px;
+}
+
+#editAcao {
+    border-radius: 100px;
+    font-weight: bolder;
+    font-size: 30px;
+    padding: 5px;
+    padding-right: 13px;
+    padding-left: 13px;
+}
+
+#delAcao {
+    border-radius: 100px;
+    font-weight: bolder;
+    font-size: 30px;
+    padding: 5px;
+    padding-right: 13px;
+    padding-left: 13px;
+}
+
+.formDelete {
+    display: flex;
+    flex-direction: row;
+    margin-right: 5px;
 }

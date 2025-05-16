@@ -42,11 +42,6 @@
                         Olá Usuário!
                     </h1>
                 </li>
-                <li class="Not">
-                    <p>
-                        Você tem 2 notificações hoje
-                    </p>
-                </li>
                 <li class="LinhasM">
                     <div></div>
                 </li>
@@ -131,15 +126,10 @@
         </nav>
     </div>
 
-    <div class="configContainer">
-
-
-    </div>
-
     <div class="FuncionariosT">
         <b>Funcionários</b>
     </div>
-     <button class="button21" id="butao">cadastro</button>
+     
     <dialog id="dialogo">
 <form class="form" method="post" action="{% url 'addFuncionarios' %}">
     {% csrf_token %}
@@ -193,6 +183,7 @@
     <div id="searchContainer">
         <i class="bi bi-search"></i>
         <div class="searchBar"><input type="search" name="searchFuncionario" id="searchFuncionario"></div>
+        <button class="button21" id="butao"><i class="bi bi-plus"></i></button>
     </div>
 <div class="funcionariosContainer">
     {% for f in funcionarios %}

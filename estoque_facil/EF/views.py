@@ -165,5 +165,18 @@ def delete_acao(request):
         print("Nenhum ID recebido")
     return redirect('estabelecer_acao')
 
+@require_POST
+def delete_produto(request):
+    db = initialize_firebase()
+    print("DELETE ACIONADO")
+    produto_id = request.POST.get('id')
+    print("ID recebido:", produto_id)
+    if produto_id:
+        db.collection('produtos').document(produto_id).delete()
+        print("Documento deletado")
+    else:
+        print("Nenhum ID recebido")
+    return redirect('produtos')
+
 def home(request):
     return render(request,'funcionarios/funcionarios.html')
