@@ -5,6 +5,7 @@ from firebase_admin import firestore
 from firebase_admin import credentials
 from django.conf import settings
 from django.views.decorators.http import require_POST
+import time
 
 # Isso aqui é o que tá inicializando o firebase, NAO MEXE
 def initialize_firebase():
@@ -48,6 +49,7 @@ def addProdutos(request):
         lote_produto = request.POST.get('loteProduto')
         data_fab = request.POST.get('dataFabProduto')
         data_val = request.POST.get('dataValProduto')
+        categoria_produto = request.POST.get('categoriaProduto')  # pega o id da categoria
 
         doc_ref = db.collection("produtos").document()
         doc_ref.set({
@@ -56,14 +58,18 @@ def addProdutos(request):
             "lote_produto": lote_produto,
             "data_fabricacao": data_fab,
             "data_validade": data_val,
-            "qtd_produtoPCx": qtd_produtoPCx
+            "qtd_produtoPCx": qtd_produtoPCx,
+            "categoria": categoria_produto  # salva categoria
         })
 
         print("Produto cadastrado com sucesso!")  
 
+        time.sleep(5)  # espera 3 segundos
+
         return redirect('produtos')  
     else:
         return JsonResponse({"erro": "Método não permitido"}, status=405)
+
 
 def addAcao(request):
     if request.method == 'POST':
@@ -131,13 +137,28 @@ def listProdutos_view(request):
     produtos_ref = db.collection('produtos')
     produtos = produtos_ref.stream()
 
+    categorias_ref = db.collection('categorias')
+    categorias = categorias_ref.stream()
+
     produtos_list = []
     for produto in produtos:
         produto_data = produto.to_dict()
         produto_data['id'] = produto.id
         produtos_list.append(produto_data)
 
-    return render(request, 'produtos/produtos.html', {'produtos': produtos_list})
+    categorias_list = []
+    for categoria in categorias:
+        cat_data = categoria.to_dict()
+        cat_data['id'] = categoria.id
+        categorias_list.append(cat_data)
+
+    context = {
+        'produtos': produtos_list,
+        'categorias': categorias_list
+    }
+
+    return render(request, 'produtos/produtos.html', context)
+
 
 def listFuncionarios_view(request):
     db = initialize_firebase()
@@ -180,3 +201,87 @@ def delete_produto(request):
 
 def home(request):
     return render(request,'funcionarios/funcionarios.html')
+
+
+from django.http import HttpResponse
+
+def inicializar_categorias(request):
+    db = initialize_firebase()
+
+    categorias_ref = db.collection('categorias')
+    existing = list(categorias_ref.limit(1).stream())
+    if existing:
+        return HttpResponse("Categorias já estão inicializadas.")
+
+    categorias = [
+        {
+            "id": "acougue",
+            "nome": "Açougue",
+            "descricao": "Carnes bovinas, suínas, aves e embutidos",
+            "icone": "knife",
+            "ativa": True,
+            "ordem": 1
+        },
+        {
+            "id": "hortifruti",
+            "nome": "Hortifruti",
+            "descricao": "Frutas, legumes e verduras frescas",
+            "icone": "leaf",
+            "ativa": True,
+            "ordem": 2
+        },
+        {
+            "id": "mercearia",
+            "nome": "Mercearia",
+            "descricao": "Alimentos não perecíveis, grãos, temperos",
+            "icone": "box",
+            "ativa": True,
+            "ordem": 3
+        },
+        {
+            "id": "bebidas",
+            "nome": "Bebidas",
+            "descricao": "Refrigerantes, sucos, águas e bebidas alcoólicas",
+            "icone": "cup-straw",
+            "ativa": True,
+            "ordem": 4
+        },
+        {
+            "id": "frios-laticinios",
+            "nome": "Frios e Laticínios",
+            "descricao": "Queijos, iogurtes, leite e derivados",
+            "icone": "cheese",
+            "ativa": True,
+            "ordem": 5
+        },
+        {
+            "id": "limpeza",
+            "nome": "Higiene e Limpeza",
+            "descricao": "Sabonetes, detergentes, papel, desinfetantes",
+            "icone": "spray-can",
+            "ativa": True,
+            "ordem": 6
+        },
+        {
+            "id": "infantil",
+            "nome": "Infantil",
+            "descricao": "Fraldas, lenços umedecidos, papinhas",
+            "icone": "baby",
+            "ativa": True,
+            "ordem": 7
+        },
+        {
+            "id": "petshop",
+            "nome": "Petshop",
+            "descricao": "Rações e produtos para animais de estimação",
+            "icone": "paw",
+            "ativa": True,
+            "ordem": 8
+        }
+    ]
+
+    for categoria in categorias:
+        doc_id = categoria.pop("id")
+        db.collection("categorias").document(doc_id).set(categoria)
+
+    return HttpResponse("Categorias inicializadas com sucesso!")

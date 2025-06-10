@@ -13,8 +13,11 @@
     <script src="{% static 'js/acao.js' %}" defer></script>
 </head>
 <body>
+
 <div id="damageControl">
-    <header>
+    
+    <header class="topBar">
+            
         <img src="{% static 'images/logo.png' %}" class="Logo_Estoque_Facil"></img>
 
         <a href="#"> <span class="icon"><i class="bi bi-bell"></i></span></a>
@@ -136,76 +139,18 @@
         </div>
     </div>
 
-    <div class="infoProdutosContainer" id="defaultDivProdutos">
-        Aguardando ação<span class="pontinhos">...</span>
-    </div>
-    
-    <form class="infoProdutosContainer" id="addDivProdutos" method="post" action="{% url 'addProdutos' %}">
-        {% csrf_token %}
-        <div class="inputGroup">
-                <div class="inputGroup2">
-                        <label>Produto</label> <input type="text" name="nomeProduto">
-                </div>
-                <div class="inputGroup2">
-                        <label>Quantidade Cx</label> <input type="number" name="qntCxProduto">
-                </div>
-                <div class="inputGroup2">
-                    <label>Produtos P/Cx</label> <input type="number" name="qntPCxProduto">
-                </div>
-                <div class="inputGroup2">
-                        <label>Lote</label> <input type="text" name="loteProduto">
-                </div>
-                <div class="inputGroup2">
-                        <label>Dt Fabricação</label> <input type="date" name="dataFabProduto">
-                </div>
-                <div class="inputGroup2">
-                        <label>Dt Validade</label> <input type="date" name="dataValProduto">
-                </div>
-        </div>
-        <button class="btnProduto" id="addButton" type="submit">Adicionar</button>
-    </form>
-
-    <form class="infoProdutosContainer" id="searchDivProdutos">
-        <div class="inputGroup">
-                <div class="inputGroup2">
-                        <label>Produto</label> <input type="text" name="nomeProduto">
-                </div>
-                <div class="inputGroup2">
-                        <label>Quantidade Cx</label> <input type="number" name="qntCxProduto">
-                </div>
-                <div class="inputGroup2">
-                    <label>Produtos P/Cx</label> <input type="number" name="qntPCxProduto">
-                </div>
-                <div class="inputGroup2">
-                        <label>Lote</label> <input type="text" name="loteProduto">
-                </div>
-                <div class="inputGroup2">
-                        <label>Dt Fabricação</label> <input type="date" name="dataFabProduto">
-                </div>
-                <div class="inputGroup2">
-                        <label>Dt Validade</label> <input type="date" name="dataValProduto">
-                </div>
-                
-        </div>
-        <button class="btnProduto" id="searchButton" type="submit">Pesquisar</button>
-    </form>
 
         <div class="addProdutoContainer" id="infoProdutoContainer">
-
-            <div class="infoEditTools">
-                <button class="btnBase" id="editAcao"><i class="bi bi-pencil"></i></button>
-                <button class="btnBase" id="delAcao"><i class="bi bi-trash"></i></button>
-            </div>
             <div class="displayGroup">
                 {% for produto in produtos %}
                 <form method="post" action="{% url 'delete_produto' %}" class="formDelete">
                     {% csrf_token %}
                     <input type="hidden" name="id" value="{{ produto.id }}">
-                    <button type="submit" class="btnDelete" onclick="return confirm('Deseja realmente deletar esse produto?');">
+                    <button type="submit" class="btnBase" id="btnDelete" onclick="return confirm('Deseja realmente deletar esse produto?');">
                         <i class="bi bi-trash"></i>
                     </button>
                 </form>
-                <button class="btnEdit"><i class="bi bi-pencil"></i></button>
+                <button class="btnBase" id="btnEdit"><i class="bi bi-pencil"></i></button>
             
                 <div class="displayGroup2">
                     <label>Produto</label>
@@ -236,6 +181,83 @@
             {% endfor %}
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.getElementById('addProduto').addEventListener('click', () => {
+  Swal.fire({
+    title: 'Adicionar Produto',
+    html: `
+      <form id="produtoForm" class="infoProdutosContainer" method="post" action="{% url 'addProdutos' %}">
+        {% csrf_token %}
+        <div class="inputGroup">
+          <div class="inputGroup2">
+            <label>Código</label>
+            <input type="text" name="codProduto" class="swal2-input" placeholder="Código">
+          </div>
+          <div class="inputGroup2">
+            <label>Produto</label>
+            <input type="text" name="nomeProduto" class="swal2-input" placeholder="Produto">
+          </div>
+          <div class="inputGroup2">
+            <label>Categoria</label>
+                <select name="categoriaProduto" class="selectCategoria" required>
+                    <option value="" disabled selected>Selecione a categoria</option>
+                        {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                {% endfor %}
+                </select>
+          </div>
+          <div class="inputGroup2">
+            <label>Quantidade Cx</label>
+            <input type="number" name="qntCxProduto" class="swal2-input" placeholder="Quantidade Cx">
+          </div>
+          <div class="inputGroup2">
+            <label>Produtos P/Cx</label>
+            <input type="number" name="qntPCxProduto" class="swal2-input" placeholder="Produtos P/Cx">
+          </div>
+          <div class="inputGroup2">
+            <label>Lote</label>
+            <input type="text" name="loteProduto" class="swal2-input" placeholder="Lote">
+          </div>
+          <div class="inputGroup2">
+            <label>Dt Fabricação</label>
+            <input type="date" name="dataFabProduto" class="swal2-input">
+          </div>
+          <div class="inputGroup2">
+            <label>Dt Validade</label>
+            <input type="date" name="dataValProduto" class="swal2-input">
+          </div>
+        </div>
+      </form>
+    `,
+    showCancelButton: true,
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Adicionar',
+    focusConfirm: false,
+    customClass: {
+      popup: 'modalForm' 
+    },
     
+  preConfirm: () => {
+
+    document.getElementById('produtoForm').submit();
+  }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      console.log(result.value)
+      Swal.fire({
+        title: 'Produto adicionado!',
+        text: 'Seu produto foi adicionado com sucesso',
+        icon: "success",
+        timer: 5000,
+        timerProgressBar: true,
+      })
+    }
+  })
+})
+
+</script>
 </body>
+
 </html>

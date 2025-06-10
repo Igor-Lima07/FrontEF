@@ -107,6 +107,7 @@ header{
     height: 60px;
     box-shadow: 0 2px 0
 }
+
 body {
     background-color: #F1F0FF;
     height: 100vh;
@@ -354,23 +355,6 @@ img {
     gap: 5px;
 }
 
-#editAcao {
-    border-radius: 100px;
-    font-weight: bolder;
-    font-size: 30px;
-    padding: 5px;
-    padding-right: 13px;
-    padding-left: 13px;
-}
-
-#delAcao {
-    border-radius: 100px;
-    font-weight: bolder;
-    font-size: 30px;
-    padding: 5px;
-    padding-right: 13px;
-    padding-left: 13px;
-}
 .btnDelete, .btnEdit {
     display: flex;
     gap: 5px;
@@ -386,6 +370,7 @@ img {
     transition: 0.3s ease;
     margin-top: 28px;
 }
+
 .btnDelete:hover, .btnEdit:hover{
     background-color: #90a8ff ;
 }
