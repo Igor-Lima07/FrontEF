@@ -107,6 +107,7 @@ header{
     height: 60px;
     box-shadow: 0 2px 0
 }
+
 body {
     background-color: #F1F0FF;
     height: 100vh;
@@ -262,13 +263,25 @@ img {
 
 .inputGroup2 {
     display: flex;
-    font-size: 20px ;
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    gap: 10px;
+    overflow: hidden;
     flex-direction: column;
-    text-align: center;
+    margin-bottom: -10px;
+    min-width: 200px;
+    margin: 10px;
 }
+
+.inputGroup2 label {
+    flex: 1;
+    margin: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+
 
 .inputGroup2 input {
     width: 35vh;
@@ -279,6 +292,38 @@ img {
     border-radius: 10px;
     text-align: center;
     font-size: 15px;
+    margin-bottom: 2px;
+    margin-inline: 10px;
+
+}
+
+.inputGroup2 select{
+    width: 35vh;
+    height:7vh;
+    padding: 5px;
+    margin-bottom: 2px;
+    margin-inline: 10px;
+    border: none;
+    background-color: #F1F0FF ;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+
+}
+
+.btnAcao{
+    display: flex;
+    gap: 5px;
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: none;
+    background-color: #e1deff;
+    box-shadow: 0px 6px 3px #bab9c5;
+    cursor: pointer;
+    font-size: 5px;
+    font-weight: bold;
+    font-family: sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .btnBase{
@@ -306,17 +351,6 @@ img {
     margin: 0;
 }
 
-#addAcao {
-    border-radius: 100px;
-    font-weight: bolder;
-    font-size: 30px;
-    padding: 5px;
-    padding-right: 13px;
-    padding-left: 13px;
-    margin-right: 190vh;
-    margin-left: 55vh;
-}
-
 #infoAcaoContainer {
     display: flex;
     flex-direction: column;
@@ -327,13 +361,15 @@ img {
     display: flex;
     flex-wrap: wrap; 
     gap: 15px; 
+    align-items: center;
+    justify-content: center;
 }
 
 .displayGroup2 {
     display: flex;
     flex-direction: column;
     text-align: center;
-    width: calc(17% - 15px); 
+    width: calc(15% - 1px); 
 }
 
 .displayBtns {
@@ -354,23 +390,6 @@ img {
     gap: 5px;
 }
 
-#editAcao {
-    border-radius: 100px;
-    font-weight: bolder;
-    font-size: 30px;
-    padding: 5px;
-    padding-right: 13px;
-    padding-left: 13px;
-}
-
-#delAcao {
-    border-radius: 100px;
-    font-weight: bolder;
-    font-size: 30px;
-    padding: 5px;
-    padding-right: 13px;
-    padding-left: 13px;
-}
 .btnDelete, .btnEdit {
     display: flex;
     gap: 5px;
@@ -384,8 +403,54 @@ img {
     font-weight: bold;
     font-family: sans-serif;
     transition: 0.3s ease;
-    margin-top: 28px;
 }
+
 .btnDelete:hover, .btnEdit:hover{
     background-color: #90a8ff ;
+}
+
+.btnAcao{
+    display: flex;
+    gap: 5px;
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: none;
+    background-color: #e1deff;
+    box-shadow: 0px 6px 3px #bab9c5;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modalForm {
+    width: auto;
+    height: 90%;
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.acoesContainer{
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    padding: 10px;
+    height: 80px;
+    margin-left: 350px;
+    margin-top: 0px;
+    width: 71%;
+    flex-direction: row;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.bi-plus {
+    font-size: 35px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }

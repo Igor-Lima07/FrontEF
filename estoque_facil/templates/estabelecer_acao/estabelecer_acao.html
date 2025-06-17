@@ -124,25 +124,13 @@
     <div class="EstabelecerT">
         <b>Estabelecer Ação</b>
     </div>
-    <form class="addAcaoContainer" method="post" action="{% url 'addAcao' %}">
-        {% csrf_token %}
-        <button type="submit" id="addAcao" class="btnBase"><i class="bi bi-plus"></i></button>
-        <div class="inputGroup">
-            <div class="inputGroup2">
-                <label>Titulo</label><input type="text" name="nomeAcao">
-            </div>
-            <div class="inputGroup2">
-                <label>Descrição</label><input type="text" name="descAcao">
-            </div>
-            <div class="inputGroup2">
-                <label>Responsável</label><input type="text" name="respAcao">
-            </div>
-            <div class="inputGroup2">
-                <label>Urgência</label><input type="text" name="urgeAcao">
-            </div>
+     <div class="acoesContainer">
+        <div >
+            <button onclick="changeDivAdd()" class="btnAcao" id="addAcao"> 
+                <i class="bi bi-plus"></i>Adicionar Ação
+            </button>
         </div>
-    </form>
-
+    </div>
     <div class="addAcaoContainer" id="infoAcaoContainer">
 
         <div class="displayGroup">
@@ -180,5 +168,65 @@
             {% endfor %}
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+// Popup para adicionar ações
+
+document.getElementById('addAcao').addEventListener('click', () => {
+  Swal.fire({
+    title: 'Adicionar Ação',
+    html: `
+      <form id="acaoForm" class="infoProdutosContainer" method="post" action="{% url 'addAcao' %}">
+        {% csrf_token %}
+        <div class="inputGroup">
+          <div class="inputGroup2">
+            <label>Título</label>
+            <input type="text" name="nomeAcao" class="swal2-input" placeholder="Digite o título" required>
+          </div>
+          <div class="inputGroup2">
+            <label>Descrição</label>
+            <input type="text" name="descAcao" class="swal2-input" placeholder="Descreva a ação" required>
+          </div>
+          <div class="inputGroup2">
+            <label>Responsável</label>
+            <select name="respAcao" class="swal2-input">
+              <option value="" disabled selected>Selecione um funcionário</option>
+              {% for funcionario in funcionarios %}
+                <option value="{{ funcionario.id }}">{{ funcionario.nome_funcionario }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="inputGroup2">
+            <label>Urgência</label>
+            <select name="urgeAcao" class="swal2-input">
+              <option value="" disabled selected>Selecione a urgência</option>
+              <option value="Alta">Alta</option>
+              <option value="Média">Média</option>
+              <option value="Baixa">Baixa</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Salvar',
+    cancelButtonText: 'Cancelar',
+    focusConfirm: false,
+    customClass: {
+      popup: 'modalForm' 
+    },
+    preConfirm: () => {
+      const form = Swal.getPopup().querySelector('#acaoForm');
+      if (!form.checkValidity()) {
+        Swal.showValidationMessage(`Por favor, preencha todos os campos`);
+        return false;
+      }
+      form.submit();
+    }
+  });
+});
+</script>
 </body>
 </html>

@@ -5,6 +5,7 @@ from firebase_admin import firestore
 from firebase_admin import credentials
 from django.conf import settings
 from django.views.decorators.http import require_POST
+import time
 
 # Isso aqui é o que tá inicializando o firebase, NAO MEXE
 def initialize_firebase():
@@ -41,29 +42,38 @@ def relatorios_view(request):
 def addProdutos(request):
     if request.method == 'POST':
         db = initialize_firebase()
-
+        
+        cod_produto = request.POST.get('codProduto')
         nome_produto = request.POST.get('nomeProduto')
+        preco_produto = float(request.POST.get('precoProduto', 0))
         qtd_produto = int(request.POST.get('qntCxProduto', 0))
         qtd_produtoPCx = int(request.POST.get('qntPCxProduto', 0))
         lote_produto = request.POST.get('loteProduto')
         data_fab = request.POST.get('dataFabProduto')
         data_val = request.POST.get('dataValProduto')
+        categoria_produto = request.POST.get('categoriaProduto')
 
         doc_ref = db.collection("produtos").document()
         doc_ref.set({
+            "cod_produto": cod_produto,
             "nome_produto": nome_produto,
+            "preco_produto": preco_produto,
             "qtd_produto": qtd_produto,
             "lote_produto": lote_produto,
             "data_fabricacao": data_fab,
             "data_validade": data_val,
-            "qtd_produtoPCx": qtd_produtoPCx
+            "qtd_produtoPCx": qtd_produtoPCx,
+            "categoria": categoria_produto 
         })
 
         print("Produto cadastrado com sucesso!")  
 
+        time.sleep(5)  # espera 3 segundos
+
         return redirect('produtos')  
     else:
         return JsonResponse({"erro": "Método não permitido"}, status=405)
+
 
 def addAcao(request):
     if request.method == 'POST':
@@ -113,16 +123,29 @@ def addFuncionarios(request):
 
 def listAcao_view(request):
     db = initialize_firebase()
+    
     tarefas_ref = db.collection('tarefas')
     tarefas = tarefas_ref.stream()
-
     tarefas_list = []
     for tarefa in tarefas:
         tarefa_data = tarefa.to_dict()
         tarefa_data['id'] = tarefa.id
         tarefas_list.append(tarefa_data)
 
-    return render(request, 'estabelecer_acao/estabelecer_acao.html', {'tarefas': tarefas_list})
+    funcionarios_ref = db.collection('funcionarios')
+    funcionarios = funcionarios_ref.stream()
+    funcionarios_list = []
+    for funcionario in funcionarios:
+        func_data = funcionario.to_dict()
+        func_data['id'] = funcionario.id
+        funcionarios_list.append(func_data)
+
+    context = {
+        'tarefas': tarefas_list,
+        'funcionarios': funcionarios_list,
+    }
+
+    return render(request, 'estabelecer_acao/estabelecer_acao.html', context)
     
 
 
@@ -131,13 +154,28 @@ def listProdutos_view(request):
     produtos_ref = db.collection('produtos')
     produtos = produtos_ref.stream()
 
+    categorias_ref = db.collection('categorias')
+    categorias = categorias_ref.stream()
+
     produtos_list = []
     for produto in produtos:
         produto_data = produto.to_dict()
         produto_data['id'] = produto.id
         produtos_list.append(produto_data)
 
-    return render(request, 'produtos/produtos.html', {'produtos': produtos_list})
+    categorias_list = []
+    for categoria in categorias:
+        cat_data = categoria.to_dict()
+        cat_data['id'] = categoria.id
+        categorias_list.append(cat_data)
+
+    context = {
+        'produtos': produtos_list,
+        'categorias': categorias_list
+    }
+
+    return render(request, 'produtos/produtos.html', context)
+
 
 def listFuncionarios_view(request):
     db = initialize_firebase()
@@ -151,6 +189,25 @@ def listFuncionarios_view(request):
         funcionarios_list.append(funcionario_data)
 
     return render(request, 'funcionarios/funcionarios.html', {'funcionarios': funcionarios_list})
+
+def editar_produto(request, id):
+    if request.method == 'POST':
+        db = initialize_firebase()
+        produto_ref = db.collection('produtos').document(id)
+
+        produto_ref.update({
+            'codigo': request.POST.get('codProduto'),
+            'nome_produto': request.POST.get('nomeProduto'),
+            'categoria': request.POST.get('categoriaProduto'),
+            'preco_produto': float(request.POST.get('precoProduto')),
+            'qtd_produtoPCx': int(request.POST.get('qntCxProduto', 0)),
+            'qtd_produto': int(request.POST.get('qntPCxProduto', 0)),
+            'lote_produto': request.POST.get('loteProduto'),
+            'data_fabricacao': request.POST.get('dataFabProduto'),
+            'data_validade': request.POST.get('dataValProduto'),
+        })
+
+        return redirect('produtos')
 
 @require_POST
 def delete_acao(request):

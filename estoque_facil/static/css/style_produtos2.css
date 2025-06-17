@@ -121,14 +121,6 @@
     box-sizing: border-box;
 }
 
-#damageControl{
-    position: fixed;
-    overflow-y: auto;
-    width: 100%;
-    height: 60px;
-    top: 0px
-}
-
 #configContainer {
     display: flex;
     position: fixed;
@@ -151,12 +143,21 @@
     align-items: center;
 }
 
-.header{
+#damageControl{
+    position: fixed;
+    overflow-y: auto;
+    width: 100%;
+    height: 60px;
+    top: 0px
+}
+
+header{
     background-color: #ffffff;
     width: 100%;
-    box-shadow: 0 2px 0;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    height: 60px;
+    box-shadow: 0 2px 0
 }
+
 body {
     background-color: #F1F0FF;
     height: 100vh;
@@ -393,24 +394,6 @@ ul li:hover ul.dropdownConf {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* muda o display para flex depois de terminar, NAO ESQUECE */
-
-.infoProdutosContainer{
-    align-items: center;
-    display: flex;
-    padding: 10px;
-    height: 500px;
-    margin-left: 24%;
-    margin-top: 40px;
-    width: 75%;
-    flex-direction: row;
-    background-color: white;
-    border-radius: 20px;
-    justify-content: center;
-    font-weight: bolder;
-    font-size: 10vh;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
 
 .addAcaoContainer{
     font-family: "Poppins", sans-serif;
@@ -461,7 +444,6 @@ ul li:hover ul.dropdownConf {
     gap: 15px;
     flex-wrap: wrap;
     justify-content: center;
-    
 }
 
 .inputGroup2 {
@@ -471,6 +453,7 @@ ul li:hover ul.dropdownConf {
     overflow: hidden;
     flex-direction: column;
     margin-bottom: -10px;
+    min-width: 200px;
     margin: 10px;
 }
 
@@ -480,12 +463,31 @@ ul li:hover ul.dropdownConf {
     margin-bottom: 5px;
     font-weight: bold;
     text-align: center;
+    width: 100%;
 }
+
+
 
 .inputGroup2 input {
     width: 35vh;
     height:7vh;
     padding: 5px;
+    border: none;
+    background-color: #F1F0FF ;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 2px;
+    margin-inline: 10px;
+
+}
+
+.inputGroup2 select{
+    width: 35vh;
+    height:7vh;
+    padding: 5px;
+    margin-bottom: 2px;
+    margin-inline: 10px;
     border: none;
     background-color: #F1F0FF ;
     border-radius: 10px;
@@ -498,7 +500,9 @@ ul li:hover ul.dropdownConf {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-right: 38vh;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .displayGroup2 {
@@ -506,8 +510,9 @@ ul li:hover ul.dropdownConf {
     flex-direction: column;
     justify-content: space-between;
     text-align: center;
-    width: calc(16.6% - 15px); 
+    width: calc(10% - 7px); 
     box-sizing: border-box;
+    align-items: center;
 }
 
 .displayGroup2 label {
@@ -616,4 +621,49 @@ ul li:hover ul.dropdownConf {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+}
+
+.modalForm {
+    width: auto;
+    height: 90%;
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#editAcao {
+    border-radius: 100px;
+    font-weight: bolder;
+    font-size: 30px;
+    padding: 5px;
+    padding-right: 13px;
+    padding-left: 13px;
+}
+
+#delAcao {
+    border-radius: 100px;
+    font-weight: bolder;
+    font-size: 30px;
+    padding: 5px;
+    padding-right: 13px;
+    padding-left: 13px;
+}
+.btnDelete, .btnEdit {
+    display: flex;
+    gap: 5px;
+    padding: 20px 20px;
+    border-radius: 100px;
+    border: none;
+    background-color: #e1deff;
+    box-shadow: 0px 6px 3px #bab9c5;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: sans-serif;
+    transition: 0.3s ease;
+}
+.btnDelete:hover, .btnEdit:hover{
+    background-color: #90a8ff ;
 }
