@@ -138,11 +138,18 @@
             <form method="post" action="{% url 'delete_acao' %}" class="formDelete">
                 {% csrf_token %}
                 <input type="hidden" name="id" value="{{ tarefa.id }}">
-                <button type="submit" class="btnDelete" onclick="return confirm('Deseja realmente deletar essa ação?');">
+                <button type="submit" class="btnDelete">
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
-            <button class="btnEdit"><i class="bi bi-pencil"></i></button>
+                <button class="btnEdit"
+                        data-id="{{ tarefa.id }}"
+                        data-titulo="{{ tarefa.nome_acao }}"
+                        data-desc="{{ tarefa.desc_acao }}"
+                        data-resp="{{ tarefa.resp_acao }}"
+                        data-urge="{{ tarefa.urge_acao }}">
+                <i class="bi bi-pencil"></i>
+                </button>
                 <div class="displayGroup2">    
                     <label>Título</label>
                     <button class="displayBtns">{{ tarefa.nome_acao|default:"Sem Título" }}</button>
@@ -225,8 +232,116 @@ document.getElementById('addAcao').addEventListener('click', () => {
       }
       form.submit();
     }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Tarefa cadastrada',
+        text: 'Tarefa cadastrada com sucesso',
+        icon: 'success',
+        timer: 4000,
+        timerProgressBar: true,
+      })
+    }
+  })
+});
+
+// Popup de edição do produto
+
+document.querySelectorAll('.btnEdit').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.id;
+    const titulo = btn.dataset.titulo || '';
+    const descricao = btn.dataset.desc || '';
+    const responsavel = btn.dataset.resp || '';
+    const urgencia = btn.dataset.urge || '';
+
+    Swal.fire({
+      title: 'Editar Ação',
+      html: `
+        <form id="editAcaoForm" class="infoProdutosContainer" method="post" action="/editar_acao/${id}/">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="${id}">
+          <div class="inputGroup">
+            <div class="inputGroup2">
+              <label>Título</label>
+              <input type="text" name="nomeAcao" class="swal2-input" value="${titulo}" placeholder="Digite o título" required>
+            </div>
+            <div class="inputGroup2">
+              <label>Descrição</label>
+              <input type="text" name="descAcao" class="swal2-input" value="${descricao}" placeholder="Descreva a ação" required>
+            </div>
+            <div class="inputGroup2">
+              <label>Responsável</label>
+              <select name="respAcao" class="swal2-input selectResp" required>
+                <option value="" disabled ${responsavel === '' ? 'selected' : ''}>Selecione um funcionário</option>
+                {% for funcionario in funcionarios %}
+                  <option value="{{ funcionario.id }}">{{ funcionario.nome_funcionario }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="inputGroup2">
+              <label>Urgência</label>
+              <select name="urgeAcao" class="swal2-input selectUrgencia" required>
+                <option value="" disabled ${urgencia === '' ? 'selected' : ''}>Selecione a urgência</option>
+                <option value="Alta">Alta</option>
+                <option value="Média">Média</option>
+                <option value="Baixa">Baixa</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      `,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Salvar',
+      focusConfirm: false,
+      customClass: {
+        popup: 'modalForm'
+      },
+      didOpen: () => {
+        // Seleciona os valores após carregar o HTML
+        document.querySelector('.selectResp').value = responsavel;
+        document.querySelector('.selectUrgencia').value = urgencia;
+      },
+      preConfirm: () => {
+        const form = document.getElementById('editAcaoForm');
+        if (!form.checkValidity()) {
+          Swal.showValidationMessage(`Por favor, preencha todos os campos`);
+          return false;
+        }
+        form.submit();
+      }
+    });
   });
 });
+
+// Popup de deletar produto
+
+document.querySelectorAll('.formDelete').forEach(form => {
+  form.addEventListener('submit', function(event) {
+    event.preventDefault(); // previne o submit padrão
+
+    Swal.fire({
+      title: 'Deletar Tarefa?',
+      text: "Deseja realmente deletar essa tarefa?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Deletar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        popup: 'modalForm' 
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // se confirmar, envia o formulário normalmente
+        form.submit();
+      }
+    });
+  });
+});
+
 </script>
 </body>
 </html>

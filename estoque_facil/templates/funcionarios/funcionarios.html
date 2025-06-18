@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Funcionários</title>
-    <link rel="stylesheet" href="{% static 'css/style_funcionarios2.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style_funcionarios.css' %}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="{% static 'js/tema.js' %}" defer></script>
     <script src="{% static 'js/funcionarios.js' %}" defer></script>
@@ -129,81 +129,258 @@
     <div class="FuncionariosT">
         <b>Funcionários</b>
     </div>
-     
-    <dialog id="dialogo">
-<form class="form" method="post" action="{% url 'addFuncionarios' %}">
-    {% csrf_token %}
-    <div class="container" style="text-align: center;">
-      <h1>Cadastro de Usuários</h1><br>
-      
-      <div class="mb-3">
-        <label for="nome" class="form-label">Nome</label>
-        <input id="nome" name="nome" type="text" class="form-control form-control-sm" required>
-      </div>
-       <br>
-      <div class="mb-3">
-        <label for="cpf" class="form-label">Cpf</label>
-        <input id="cpf" name="cpf" type="text" class="form-control form-control-sm" required>
-      </div>
-      <br>
-      <div class="mb-3">
-        <label for="Cargo" class="form-label">Cargo</label>
-        <input id="cargo" name="cargo" type="text" class="form-control form-control-sm" required>
-      </div>
-      <br>
-      <div class="mb-3">
-        <label for="data" class="form-label">Data de Nascimento</label>
-        <input id="data" name="data" type="date" class="form-control form-control-sm" required>
-      </div>
-       <br>
-      <p>Sexo: </p>
-<input type="radio" id="feminino" name="sexo" value="feminino" required>
-<label for="feminino">Feminino</label>
-
-<input type="radio" id="masculino" name="sexo" value="masculino" required>
-<label for="masculino">Masculino</label>
-
-<input type="radio" id="outro" name="sexo" value="outro" required>
-<label for="outro">Outro</label>
-      <br><br>
-      <div class="mb-3">
-        <label for="tel" class="form-label">Telefone</label>
-        <input id="tel" name="tel" type="tel" class="form-control form-control-sm" required>
-      </div>
-        <br>
-      <div class="mb-3">
-        <label for="mail" class="form-label">E-mail</label>
-        <input id="mail" name="mail" type="email" class="form-control form-control-sm" required>
-      </div>
-
-      <button type="submit" class="btnclose">Enviar</button>
-    </div>
-</form>
-</dialog>
     <div id="searchContainer">
         <i class="bi bi-search"></i>
         <div class="searchBar"><input type="search" name="searchFuncionario" id="searchFuncionario"></div>
-        <button class="button21" id="butao"><i class="bi bi-plus"></i></button>
+        <button class="btnAddFuncionario" id="addFuncionario">
+            <i class="bi bi-plus-lg"></i>
+        </button>
     </div>
+
 <div class="funcionariosContainer">
     {% for f in funcionarios %}
-    <div class="funcionarioSpecific">
-        <div class="funcionarioImgContainerBackground">
-            <div class="funcionarioImgContainer">
-                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                     alt="funcionarioImg">
-            </div>
+
+<div class="funcionarioSpecific">
+    <div class="funcionarioImgContainerBackground">
+        <div class="funcionarioImgContainer">
+            <i class="bi bi-person-fill"></i>
         </div>
-        <p>{{ f.nome_funcionario }}</p>
-        <p>{{ f.cargo_funcionario }}</p>
-        <p>ID: {{ f.id }}</p>
     </div>
+
+    <div class="funcionarioInfo">
+        <p class="funcionarioNome">{{ f.nome_funcionario }}</p>
+        <p class="funcionarioFuncao">{{ f.cargo_funcionario }}</p>
+        <p class="funcionarioID">ID: {{ f.id }}</p>
+    </div>
+    <button class="btnEditFuncionario"
+        data-id="{{ f.id }}"
+        data-nome="{{ f.nome_funcionario }}"
+        data-cpf="{{ f.cpf_funcionario }}"
+        data-cargo="{{ f.cargo_funcionario }}"
+        data-data="{{ f.data_funcionario }}"
+        data-sexo="{{ f.sexo_funcionario }}"
+        data-tel="{{ f.tel_funcionario }}"
+        data-mail="{{ f.email_funcionario }}"
+    >
+    <i class="bi bi-pencil-fill"></i>
+    </button>
+
+            
+            <form method="post" action="{% url 'delete_funcionario' %}" class="formDelete">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ f.id }}">
+                <button type="submit" class="btnDeletarFuncionario">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            </form>
+            
+
+
+</div>
     {% empty %}
     <p style="padding: 1rem;">Nenhum funcionário cadastrado.</p>
     {% endfor %}
 </div>
+    
     </div>
-    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.getElementById('addFuncionario').addEventListener('click', () => {
+  Swal.fire({
+    title: 'Cadastro de Funcionário',
+    html: `
+      <form class="funcionarioForm" method="post" action="{% url 'addFuncionarios' %}">
+        {% csrf_token %}
+        <div class="inputGroup">
+          <div class="inputGroup2">
+            <label for="nome">Nome</label>
+            <input id="nome" name="nome" type="text" class="swal2-input" placeholder="Nome" required>
+          </div>
+          <div class="inputGroup2">
+            <label for="cpf">Cpf</label>
+            <input id="cpf" name="cpf" type="text" class="swal2-input" placeholder="Cpf" required>
+          </div>
+          <div class="inputGroup2">
+            <label for="cargo">Cargo</label>
+            <input id="cargo" name="cargo" type="text" class="swal2-input" placeholder="Cargo" required>
+          </div>
+          <div class="inputGroup2">
+            <label for="data">Data de Nascimento</label>
+            <input id="data" name="data" type="date" class="swal2-input" required>
+          </div>
+
+          <div class="inputGroup2">
+            <label for="sexo">Sexo</label>
+            <select id="sexo" name="sexo" class="swal2-input" required>
+              <option value="" disabled selected>Selecione o sexo</option>
+              <option value="feminino">Feminino</option>
+              <option value="masculino">Masculino</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+
+          <div class="inputGroup2">
+            <label for="tel">Telefone</label>
+            <input id="tel" name="tel" type="tel" class="swal2-input" placeholder="Telefone" required>
+          </div>
+          <div class="inputGroup2">
+            <label for="mail">E-mail</label>
+            <input id="mail" name="mail" type="email" class="swal2-input" placeholder="E-mail" required>
+          </div>
+        </div>
+      </form>
+    `,
+    showCancelButton: true,
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Enviar',
+    focusConfirm: false,
+    customClass: {
+      popup: 'modalForm'
+    },
+
+preConfirm: () => {
+  const form = Swal.getPopup().querySelector('.funcionarioForm'); // <- aqui estava o erro
+  if (!form.checkValidity()) {
+    Swal.showValidationMessage(`Por favor, preencha todos os campos`);
+    return false;
+  }
+  form.submit();
+}
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Funcionário cadastrado',
+        text: 'Funcionário cadastrado com sucesso',
+        icon: 'success',
+        timer: 4000,
+        timerProgressBar: true,
+      })
+    }
+  })
+});
+
+// Popup de edição de funcionário
+
+document.querySelectorAll('.btnEditFuncionario').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.id;
+    const nome = btn.dataset.nome || '';
+    const cpf = btn.dataset.cpf || '';
+    const cargo = btn.dataset.cargo || '';
+    const data = btn.dataset.data || '';
+    const sexo = btn.dataset.sexo || '';
+    const tel = btn.dataset.tel || '';
+    const mail = btn.dataset.mail || '';
+
+    Swal.fire({
+      title: 'Editar Funcionário',
+      html: `
+        <form id="editFuncionarioForm" class="funcionarioForm" method="post" action="/editar_funcionario/${id}/">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="${id}">
+          <div class="inputGroup">
+            <div class="inputGroup2">
+              <label>Nome</label>
+              <input type="text" name="nome" class="swal2-input" value="${nome}" placeholder="Nome" required>
+            </div>
+            <div class="inputGroup2">
+              <label>CPF</label>
+              <input type="text" name="cpf" class="swal2-input" value="${cpf}" placeholder="CPF" required>
+            </div>
+            <div class="inputGroup2">
+              <label>Cargo</label>
+              <input type="text" name="cargo" class="swal2-input" value="${cargo}" placeholder="Cargo" required>
+            </div>
+            <div class="inputGroup2">
+              <label>Data de Nascimento</label>
+              <input type="date" name="data" class="swal2-input" value="${data}" required>
+            </div>
+            <div class="inputGroup2">
+              <label>Sexo</label>
+              <select name="sexo" class="swal2-input" required>
+                <option value="" disabled ${sexo === '' ? 'selected' : ''}>Selecione o sexo</option>
+                <option value="feminino" ${sexo === 'feminino' ? 'selected' : ''}>Feminino</option>
+                <option value="masculino" ${sexo === 'masculino' ? 'selected' : ''}>Masculino</option>
+                <option value="outro" ${sexo === 'outro' ? 'selected' : ''}>Outro</option>
+              </select>
+            </div>
+            <div class="inputGroup2">
+              <label>Telefone</label>
+              <input type="tel" name="tel" class="swal2-input" value="${tel}" placeholder="Telefone" required>
+            </div>
+            <div class="inputGroup2">
+              <label>E-mail</label>
+              <input type="email" name="mail" class="swal2-input" value="${mail}" placeholder="E-mail" required>
+            </div>
+          </div>
+        </form>
+      `,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Salvar',
+      focusConfirm: false,
+      customClass: {
+        popup: 'modalForm'
+      },
+      preConfirm: () => {
+        const form = document.getElementById('editFuncionarioForm');
+        if (!form.checkValidity()) {
+          Swal.showValidationMessage(`Por favor, preencha todos os campos`);
+          return false;
+        }
+        form.submit();
+      }
+    });
+  });
+});
+
+// Popup de deleção de funcionario
+
+document.querySelectorAll('.formDelete').forEach(form => {
+  form.addEventListener('submit', function(event) {
+    event.preventDefault(); // previne o submit padrão
+
+    Swal.fire({
+      title: 'Deletar funcionário?',
+      text: "Deseja realmente deletar esse funcionário do sistema?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Deletar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        popup: 'modalForm' 
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  });
+});
+
+// Pesquisa de produtos
+
+document.getElementById('searchFuncionario').addEventListener('input', function () {
+  const termo = this.value.toLowerCase();
+  const funcionarios = document.querySelectorAll('.funcionarioSpecific');
+
+  funcionarios.forEach(f => {
+    const nome = f.querySelector('.funcionarioNome').textContent.toLowerCase();
+    const cargo = f.querySelector('.funcionarioFuncao').textContent.toLowerCase();
+
+    if (nome.includes(termo) || cargo.includes(termo)) {
+      f.style.display = '';
+    } else {
+      f.style.display = 'none';
+    }
+  });
+});
+
+</script>
 </body>
 
 </html>

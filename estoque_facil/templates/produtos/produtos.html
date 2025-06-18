@@ -16,7 +16,7 @@
 
 <div id="damageControl">
     
-    <header class="topBar">
+    <header>
             
         <img src="{% static 'images/logo.png' %}" class="Logo_Estoque_Facil"></img>
 
@@ -133,9 +133,7 @@
             </button>
         </div>
         <div>
-            <button onclick="changeDivSearch()" class="btnProduto" id="searchProduto">
-                <i class="bi bi-search"></i>Procurar Produto 
-            </button>
+        <input type="text" id="searchProduto" placeholder="Pesquisar produtos..." class="searchInput">
         </div>
     </div>
 
@@ -266,16 +264,20 @@ document.getElementById('addProduto').addEventListener('click', () => {
       popup: 'modalForm' 
     },
     
-  preConfirm: () => {
-
-    document.getElementById('produtoForm').submit();
-  }
+    preConfirm: () => {
+      const form = Swal.getPopup().querySelector('#produtoForm');
+      if (!form.checkValidity()) {
+        Swal.showValidationMessage(`Por favor, preencha todos os campos`);
+        return false;
+      }
+      form.submit();
+    }
   }).then((result) => {
     if (result.isConfirmed) {
       console.log(result.value)
       Swal.fire({
-        title: 'Produto adicionado!',
-        text: 'Seu produto foi adicionado com sucesso',
+        title: 'Produto adicionado',
+        text: 'Produto adicionado com sucesso',
         icon: "success",
         timer: 5000,
         timerProgressBar: true,
@@ -308,11 +310,11 @@ document.querySelectorAll('.btnEdit').forEach(btn => {
           <div class="inputGroup">
             <div class="inputGroup2">
               <label>Código</label>
-              <input type="text" name="codProduto" class="swal2-input" value="${cod}" placeholder="Código">
+              <input type="text" name="codProduto" class="swal2-input" value="${cod}" placeholder="Código" required>
             </div>
             <div class="inputGroup2">
               <label>Produto</label>
-              <input type="text" name="nomeProduto" class="swal2-input" value="${nome}" placeholder="Produto">
+              <input type="text" name="nomeProduto" class="swal2-input" value="${nome}" placeholder="Produto" required>
             </div>
             <div class="inputGroup2">
               <label>Categoria</label>
@@ -325,27 +327,27 @@ document.querySelectorAll('.btnEdit').forEach(btn => {
             </div>
             <div class="inputGroup2">
               <label>Preço</label>
-              <input type="text" name="precoProduto" class="swal2-input" value="${preco}" placeholder="Preço">
+              <input type="text" name="precoProduto" class="swal2-input" value="${preco}" placeholder="Preço" required>
             </div>
             <div class="inputGroup2">
               <label>Quantidade Cx</label>
-              <input type="number" name="qntCxProduto" class="swal2-input" value="${cx}" placeholder="Quantidade Cx">
+              <input type="number" name="qntCxProduto" class="swal2-input" value="${cx}" placeholder="Quantidade Cx" required>
             </div>
             <div class="inputGroup2">
               <label>Produtos P/Cx</label>
-              <input type="number" name="qntPCxProduto" class="swal2-input" value="${pcx}" placeholder="Produtos P/Cx">
+              <input type="number" name="qntPCxProduto" class="swal2-input" value="${pcx}" placeholder="Produtos P/Cx" required>
             </div>
             <div class="inputGroup2">
               <label>Lote</label>
-              <input type="text" name="loteProduto" class="swal2-input" value="${lote}" placeholder="Lote">
+              <input type="text" name="loteProduto" class="swal2-input" value="${lote}" placeholder="Lote" required>
             </div>
             <div class="inputGroup2">
               <label>Dt Fabricação</label>
-              <input type="date" name="dataFabProduto" class="swal2-input" value="${fab}">
+              <input type="date" name="dataFabProduto" class="swal2-input" value="${fab}" required>
             </div>
             <div class="inputGroup2">
               <label>Dt Validade</label>
-              <input type="date" name="dataValProduto" class="swal2-input" value="${val}">
+              <input type="date" name="dataValProduto" class="swal2-input" value="${val}" required>
             </div>
           </div>
         </form>
@@ -362,7 +364,12 @@ document.querySelectorAll('.btnEdit').forEach(btn => {
         document.querySelector('.selectCategoria').value = categoria;
       },
       preConfirm: () => {
-        document.getElementById('editProdutoForm').submit();
+        const form = document.getElementById('editProdutoForm');
+        if (!form.checkValidity()) {
+          Swal.showValidationMessage(`Por favor, preencha todos os campos`);
+          return false;
+        }
+        form.submit();
       }
     });
   });
@@ -394,6 +401,23 @@ document.querySelectorAll('.formDelete').forEach(form => {
     });
   });
 });
+
+document.getElementById('searchProduto').addEventListener('input', function () {
+  const termo = this.value.toLowerCase();
+  const produtos = document.querySelectorAll('.produtoItem');
+
+  produtos.forEach(item => {
+    const nome = item.querySelector('.produtoNome')?.textContent.toLowerCase() || '';
+    const categoria = item.querySelector('.produtoCategoria')?.textContent.toLowerCase() || '';
+
+    if (nome.includes(termo) || categoria.includes(termo)) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+});
+
 </script>
 
 </script>

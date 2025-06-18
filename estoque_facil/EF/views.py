@@ -14,6 +14,8 @@ def initialize_firebase():
         firebase_admin.initialize_app(cred)
     return firestore.client()
 
+# Caminhos das páginas
+
 def login_view(request):
     return render(request, 'login/login.html')
 
@@ -38,6 +40,8 @@ def politica_view(request):
 
 def relatorios_view(request):
     return render(request, 'relatorios/relatorios.html')
+
+# CRUD Produtos
 
 def addProdutos(request):
     if request.method == 'POST':
@@ -68,86 +72,12 @@ def addProdutos(request):
 
         print("Produto cadastrado com sucesso!")  
 
-        time.sleep(5)  # espera 3 segundos
+        time.sleep(5)
 
         return redirect('produtos')  
     else:
         return JsonResponse({"erro": "Método não permitido"}, status=405)
-
-
-def addAcao(request):
-    if request.method == 'POST':
-        db = initialize_firebase()
-
-        nome_acao = request.POST.get('nomeAcao')
-        desc_acao = request.POST.get('descAcao')
-        resp_acao = request.POST.get('respAcao')
-        urge_acao = request.POST.get('urgeAcao')
-
-        doc_ref = db.collection("tarefas").document()
-        doc_ref.set({
-            "nome_acao": nome_acao,
-            "desc_acao": desc_acao,
-            "resp_acao": resp_acao,
-            "urge_acao": urge_acao,
-        })
-
-        print("Tarefa cadastrada com sucesso!")  # Isso vai para o console
-
-        return redirect('estabelecer_acao')  # Isso redireciona o usuário de volta para a página
-    else:
-        return JsonResponse({"erro": "Método não permitido"}, status=405)
-
-def addFuncionarios(request):
-    if request.method == 'POST':
-        db = initialize_firebase()
-
-        funcionarios_ref = db.collection("funcionarios")
-        quantidade = len(list(funcionarios_ref.stream()))
-        novo_id = str(quantidade + 1)
-
-        doc_ref = db.collection("funcionarios").document(novo_id)
-        doc_ref.set({
-            "nome_funcionario": request.POST.get('nome'),
-            "cargo_funcionario": request.POST.get('cargo'),
-            "cpf_funcionario": request.POST.get('cpf'),
-            "data_funcionario": request.POST.get('data'),
-            "sexo_funcionario": request.POST.get('sexo'),
-            "tel_funcionario": request.POST.get('tel'),
-            "email_funcionario": request.POST.get('mail')
-        })
-
-        return redirect('funcionarios')
-    else:
-        return JsonResponse({"erro": "Método não permitido"}, status=405)
-
-def listAcao_view(request):
-    db = initialize_firebase()
     
-    tarefas_ref = db.collection('tarefas')
-    tarefas = tarefas_ref.stream()
-    tarefas_list = []
-    for tarefa in tarefas:
-        tarefa_data = tarefa.to_dict()
-        tarefa_data['id'] = tarefa.id
-        tarefas_list.append(tarefa_data)
-
-    funcionarios_ref = db.collection('funcionarios')
-    funcionarios = funcionarios_ref.stream()
-    funcionarios_list = []
-    for funcionario in funcionarios:
-        func_data = funcionario.to_dict()
-        func_data['id'] = funcionario.id
-        funcionarios_list.append(func_data)
-
-    context = {
-        'tarefas': tarefas_list,
-        'funcionarios': funcionarios_list,
-    }
-
-    return render(request, 'estabelecer_acao/estabelecer_acao.html', context)
-    
-
 
 def listProdutos_view(request):
     db = initialize_firebase()
@@ -176,20 +106,6 @@ def listProdutos_view(request):
 
     return render(request, 'produtos/produtos.html', context)
 
-
-def listFuncionarios_view(request):
-    db = initialize_firebase()
-    funcionarios_ref = db.collection('funcionarios')
-    funcionarios = funcionarios_ref.stream()
-
-    funcionarios_list = []
-    for funcionario in funcionarios:
-        funcionario_data = funcionario.to_dict()
-        funcionario_data['id'] = funcionario.id
-        funcionarios_list.append(funcionario_data)
-
-    return render(request, 'funcionarios/funcionarios.html', {'funcionarios': funcionarios_list})
-
 def editar_produto(request, id):
     if request.method == 'POST':
         db = initialize_firebase()
@@ -208,20 +124,7 @@ def editar_produto(request, id):
         })
 
         return redirect('produtos')
-
-@require_POST
-def delete_acao(request):
-    db = initialize_firebase()
-    print("DELETE ACIONADO")
-    tarefa_id = request.POST.get('id')
-    print("ID recebido:", tarefa_id)
-    if tarefa_id:
-        db.collection('tarefas').document(tarefa_id).delete()
-        print("Documento deletado")
-    else:
-        print("Nenhum ID recebido")
-    return redirect('estabelecer_acao')
-
+    
 @require_POST
 def delete_produto(request):
     db = initialize_firebase()
@@ -235,5 +138,159 @@ def delete_produto(request):
         print("Nenhum ID recebido")
     return redirect('produtos')
 
+
+# CRUD Ações
+
+def addAcao(request):
+    if request.method == 'POST':
+        db = initialize_firebase()
+
+        nome_acao = request.POST.get('nomeAcao')
+        desc_acao = request.POST.get('descAcao')
+        resp_acao = request.POST.get('respAcao')
+        urge_acao = request.POST.get('urgeAcao')
+
+        doc_ref = db.collection("tarefas").document()
+        doc_ref.set({
+            "nome_acao": nome_acao,
+            "desc_acao": desc_acao,
+            "resp_acao": resp_acao,
+            "urge_acao": urge_acao,
+        })
+
+        print("Tarefa cadastrada com sucesso") 
+
+        time.sleep(5)
+
+        return redirect('estabelecer_acao')
+    else:
+        return JsonResponse({"erro": "Método não permitido"}, status=405)
+    
+def listAcao_view(request):
+    db = initialize_firebase()
+    
+    tarefas_ref = db.collection('tarefas')
+    tarefas = tarefas_ref.stream()
+    tarefas_list = []
+    for tarefa in tarefas:
+        tarefa_data = tarefa.to_dict()
+        tarefa_data['id'] = tarefa.id
+        tarefas_list.append(tarefa_data)
+
+    funcionarios_ref = db.collection('funcionarios')
+    funcionarios = funcionarios_ref.stream()
+    funcionarios_list = []
+    for funcionario in funcionarios:
+        func_data = funcionario.to_dict()
+        func_data['id'] = funcionario.id
+        funcionarios_list.append(func_data)
+
+    context = {
+        'tarefas': tarefas_list,
+        'funcionarios': funcionarios_list,
+    }
+
+    return render(request, 'estabelecer_acao/estabelecer_acao.html', context)
+
+def editar_acao(request, id):
+    if request.method == 'POST':
+        db = initialize_firebase()
+        tarefa_ref = db.collection('tarefas').document(id)
+
+        tarefa_ref.update({
+            'nome_acao': request.POST.get('nomeAcao'),
+            'desc_acao': request.POST.get('descAcao'),
+            'respo_acao': request.POST.get('respAcao'),
+            'urge_acao': request.POST.get('urgeAcao'),
+        })
+
+        return redirect('estabelecer_acao')
+
+@require_POST
+def delete_acao(request):
+    db = initialize_firebase()
+    print("DELETE ACIONADO")
+    tarefa_id = request.POST.get('id')
+    print("ID recebido:", tarefa_id)
+    if tarefa_id:
+        db.collection('tarefas').document(tarefa_id).delete()
+        print("Documento deletado")
+    else:
+        print("Nenhum ID recebido")
+    return redirect('estabelecer_acao')
+    
+
+
+# CRUD Funcionarios
+
+def addFuncionarios(request):
+    if request.method == 'POST':
+        db = initialize_firebase()
+
+        funcionarios_ref = db.collection("funcionarios")
+        quantidade = len(list(funcionarios_ref.stream()))
+        novo_id = str(quantidade + 1)
+
+        doc_ref = db.collection("funcionarios").document(novo_id)
+        doc_ref.set({
+            "nome_funcionario": request.POST.get('nome'),
+            "cargo_funcionario": request.POST.get('cargo'),
+            "cpf_funcionario": request.POST.get('cpf'),
+            "data_funcionario": request.POST.get('data'),
+            "sexo_funcionario": request.POST.get('sexo'),
+            "tel_funcionario": request.POST.get('tel'),
+            "email_funcionario": request.POST.get('mail')
+        })
+
+        time.sleep(5)
+
+        return redirect('funcionarios')
+    else:
+        return JsonResponse({"erro": "Método não permitido"}, status=405)
+
+def listFuncionarios_view(request):
+    db = initialize_firebase()
+    funcionarios_ref = db.collection('funcionarios')
+    funcionarios = funcionarios_ref.stream()
+
+    funcionarios_list = []
+    for funcionario in funcionarios:
+        funcionario_data = funcionario.to_dict()
+        funcionario_data['id'] = funcionario.id
+        funcionarios_list.append(funcionario_data)
+
+    return render(request, 'funcionarios/funcionarios.html', {'funcionarios': funcionarios_list})
+
 def home(request):
     return render(request,'funcionarios/funcionarios.html')
+
+def editar_funcionario(request, id):
+    if request.method == 'POST':
+        db = initialize_firebase()
+        tarefa_ref = db.collection('funcionarios').document(id)
+
+        tarefa_ref.update({
+            "nome_funcionario": request.POST.get('nome'),
+            "cargo_funcionario": request.POST.get('cargo'),
+            "cpf_funcionario": request.POST.get('cpf'),
+            "data_funcionario": request.POST.get('data'),
+            "sexo_funcionario": request.POST.get('sexo'),
+            "tel_funcionario": request.POST.get('tel'),
+            "email_funcionario": request.POST.get('mail')
+        })
+
+        return redirect('funcionarios')
+    
+@require_POST
+def delete_funcionario(request):
+    db = initialize_firebase()
+    print("DELETE ACIONADO")
+    funcionarios_id = request.POST.get('id')
+    print("ID recebido:", funcionarios_id)
+    if funcionarios_id:
+        db.collection('funcionarios').document(funcionarios_id).delete()
+        print("Documento deletado")
+    else:
+        print("Nenhum ID recebido")
+    return redirect('funcionarios')
+    
