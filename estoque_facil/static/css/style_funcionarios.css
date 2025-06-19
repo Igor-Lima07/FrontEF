@@ -288,7 +288,7 @@ img {
     color: rgb(2, 2, 2);
     border: none;
     border-radius: 100%;
-    width: 100%;
+    width: 40px;
     height: 40px;
     font-size: 28px;
     box-shadow: 0px 3px 3px #bab9c5;
@@ -323,6 +323,30 @@ img {
     transition: visibility 0.2s ease, opacity 0.2s ease;
     opacity: 0;
 }
+
+#detailsFuncionario{
+    background-color: #01afff;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: auto;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    transition: visibility 0.2s ease, opacity 0.2s ease;
+    opacity: 0;
+    align-items: center;
+}
+
+
 
 .modalForm {
     width: auto;
@@ -425,9 +449,9 @@ img {
 }
 
 #searchContainer {
-    margin-left: 327px;
+    margin-left: 20.5%;
     margin-top: 10px;
-    width: calc(100% - 350px);
+    width: 75%;
     display: flex;
     padding: 10px;
     align-items: center;
@@ -438,6 +462,11 @@ img {
     font-size: 24px;
     color: #444;
     margin-left: 15px;
+}
+
+#lupa2 {
+    margin-right: 15px;
+    color: #ffffff;
 }
 
 #searchContainer input{
@@ -507,6 +536,78 @@ img {
     margin: 0;
 }
 
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    background: var(--branco);
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--azul-principal);
+    margin-bottom: 20px;
+}
+
+
+h1 {
+    font-size: 26px;
+    color: var(--azul-principal);
+    margin-bottom: 5px;
+}
+
+.info p {
+    font-size: 16px;
+    margin: 5px 0;
+    color: var(--cinza-texto);
+}
+
+.section {
+    text-align: left;
+    margin-top: 35px;
+}
+
+.section h2 {
+    color: var(--azul-principal);
+    font-size: 20px;
+    border-bottom: 2px solid var(--azul-claro);
+    padding-bottom: 6px;
+    margin-bottom: 15px;
+}
+
+.section ul {
+    list-style: disc;
+    padding-left: 25px;
+    color: var(--cinza-texto);
+}
+
+.section ul li {
+    margin-bottom: 8px;
+}
+
+.report-box {
+    background-color: var(--azul-claro);
+    padding: 15px 20px;
+    border-radius: 8px;
+    border-left: 4px solid var(--azul-principal);
+    color: #333;
+}
+
+.detailsModal {
+    max-width: 700px;
+    width: 50%;
+    height: 100%;
+    padding: 40px 30px;
+    border-radius: 12px;
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+}
 
 .funcionarioImgContainer {
     display: flex;
@@ -521,27 +622,6 @@ img {
     color: #494848;
 }
 
-
-
-.button21{
-    float: right;
-}
-
-
-
-.container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    z-index: 1000;
-    
-}
-
 .funcionarioSpecific:hover .btnDeletarFuncionario {
     visibility: visible;
     opacity: 1;
@@ -551,4 +631,10 @@ img {
     visibility: visible;
     opacity: 1;
 }
+
+.funcionarioSpecific:hover #detailsFuncionario {
+    visibility: visible;
+    opacity: 1;
+}
+
 

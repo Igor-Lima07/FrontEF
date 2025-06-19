@@ -355,7 +355,7 @@ ul li:hover ul.dropdownConf {
     display: flex;
     padding: 10px;
     height: 80px;
-    margin-left: 350px;
+    margin-left: 21%;
     margin-top: 0px;
     width: 71%;
     flex-direction: row;
@@ -502,7 +502,7 @@ ul li:hover ul.dropdownConf {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    width: 100%;
+    width: 90%;
     align-items: center;
     justify-content: center;
 }
@@ -510,11 +510,13 @@ ul li:hover ul.dropdownConf {
 .displayGroup2 {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     width: calc(10% - 7px); 
     box-sizing: border-box;
     align-items: center;
+
 }
 
 .displayGroup2 label {
@@ -592,6 +594,7 @@ ul li:hover ul.dropdownConf {
     font-weight: bold;
     font-family: sans-serif;
     transition: 0.3s ease;
+    margin-top: 5px;
 }
 
 .btnBase:hover{
@@ -605,7 +608,7 @@ ul li:hover ul.dropdownConf {
     padding: 30px;
     padding-bottom: 50px;
     height: auto;
-    margin-left: 24%;
+    margin-left: 21%;
     margin-top: 40px;
     width: 75%;
     flex-direction: row;
@@ -665,6 +668,7 @@ ul li:hover ul.dropdownConf {
     font-weight: bold;
     font-family: sans-serif;
     transition: 0.3s ease;
+    margin-top: 30px;
 }
 .btnDelete:hover, .btnEdit:hover{
     background-color: #90a8ff ;

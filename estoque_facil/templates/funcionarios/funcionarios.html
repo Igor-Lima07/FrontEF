@@ -152,6 +152,9 @@
         <p class="funcionarioFuncao">{{ f.cargo_funcionario }}</p>
         <p class="funcionarioID">ID: {{ f.id }}</p>
     </div>
+    <button id="detailsFuncionario">
+      <i class="bi bi-search" id="lupa2"></i>
+    </button>
     <button class="btnEditFuncionario"
         data-id="{{ f.id }}"
         data-nome="{{ f.nome_funcionario }}"
@@ -362,7 +365,7 @@ document.querySelectorAll('.formDelete').forEach(form => {
   });
 });
 
-// Pesquisa de produtos
+// Pesquisa de funcionários
 
 document.getElementById('searchFuncionario').addEventListener('input', function () {
   const termo = this.value.toLowerCase();
@@ -378,6 +381,56 @@ document.getElementById('searchFuncionario').addEventListener('input', function 
       f.style.display = 'none';
     }
   });
+});
+
+// Popup de descrição de funcionário
+
+document.getElementById('detailsFuncionario').addEventListener('click', () => {
+  Swal.fire({
+    html: `
+    <div>
+    <i class="bi bi-person-fill"></i>
+    <h1>Ana Silva</h1>
+    <div class="info">
+        <p><strong>ID:</strong> 00123</p>
+        <p><strong>Função:</strong> Caixa</p>
+    </div>
+
+    <div class="section">
+        <h2>Encargos</h2>
+        <ul>
+            <li>Atendimento ao cliente</li>
+            <li>Abertura de caixa</li>
+            <li>Fechamento de caixa</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Tarefas Diárias</h2>
+        <ul>
+            <li>Conferir troco no início do turno</li>
+            <li>Organizar o balcão de atendimento</li>
+            <li>Fechar o caixa às 18h</li>
+            <li>Emitir notas fiscais corretamente</li>
+            <li>Conferir e arquivar comprovantes de pagamento</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Relatório do Funcionário</h2>
+        <div class="report-box">
+            Ana apresenta excelente desempenho, sendo pontual, organizada e cordial com os clientes.
+            Realiza todas as tarefas com atenção e responsabilidade. Nenhum incidente registrado no último trimestre.
+        </div>
+    </div>
+</div>
+    `,
+    showConfirmButton: false,
+    customClass: {
+      popup: 'detailsModal'
+    },
+  })
+
 });
 
 </script>
