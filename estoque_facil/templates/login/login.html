@@ -11,7 +11,6 @@
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-<script src="{% static 'js/login2.js' %}" type="module"></script>
 
   </head>
   <body>
@@ -24,18 +23,20 @@
       <div class="login">
         <h1>Login</h1>
       </div>
-      <form id="loginForm">
-        <div class="ibox">
-          <input type="text" id="username" placeholder="Usuário" required />
-          <i class="bx bxs-user"></i>
-        </div>
-        <div class="ibox">
-          <input type="password" id="access_key" placeholder="Chave de Acesso" required />
-          <i class="bx bxs-lock-alt"></i>
-        </div>
-        <div class="loginMessage"> Credenciais Inválidas </div>
-        <button type="submit" class="botao">Login</button>
-      </form>
+<form id="loginForm" method="POST" action="{% url 'login_submit' %}">
+  {% csrf_token %}
+  <div class="ibox">
+    <input type="text" name="username" placeholder="Usuário" required />
+    <i class="bx bxs-user"></i>
+  </div>
+  <div class="ibox">
+    <input type="password" name="access_key" placeholder="Chave de Acesso" required />
+    <i class="bx bxs-lock-alt"></i>
+  </div>
+  <div class="loginMessage"> {% for message in messages %}{{ message }}{% endfor %} </div>
+  <button type="submit" class="botao">Login</button>
+</form>
+
     </div>
   </div>
   </body>

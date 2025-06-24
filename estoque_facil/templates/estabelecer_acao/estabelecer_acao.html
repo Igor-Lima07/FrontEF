@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estabelecer Ação</title>
-    <link rel="stylesheet" href="{% static 'css/style_acao2.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style_acao.css' %}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="{% static 'js/tema.js' %}" defer></script>
     <script src="{% static 'js/acao.js' %}" defer></script>
@@ -124,17 +124,28 @@
     <div class="EstabelecerT">
         <b>Estabelecer Ação</b>
     </div>
-     <div class="acoesContainer">
-        <div >
-            <button onclick="changeDivAdd()" class="btnAcao" id="addAcao"> 
-                <i class="bi bi-plus"></i>Adicionar Ação
-            </button>
-        </div>
+
+<form method="get" action="{% url 'estabelecer_acao' %}">
+  <div id="searchContainer">
+    <i class="bi bi-search"></i>
+    <div class="searchBar">
+      <input type="search" name="searchAcao" id="searchAcao"
+             placeholder="Buscar por título ou responsavel"
+             value="{{ request.GET.searchAcao }}">
     </div>
+</form>
+  
+
+<button type="button" class="btnAdd" id="addAcao">
+  <i class="bi bi-plus-lg"></i>
+</button>
+    </div>
+
     <div class="addAcaoContainer" id="infoAcaoContainer">
 
-        <div class="displayGroup">
+
             {% for tarefa in tarefas %}
+          <div class="displayGroup">
             <form method="post" action="{% url 'delete_acao' %}" class="formDelete">
                 {% csrf_token %}
                 <input type="hidden" name="id" value="{{ tarefa.id }}">
@@ -160,7 +171,7 @@
                 </div>
                 <div class="displayGroup2">
                     <label>Responsável</label>
-                    <button class="displayBtns">{{ tarefa.resp_acao|default:"Desconhecido" }}</button>
+                    <button class="displayBtns">{{ tarefa.nome_responsavel|default:"Desconhecido" }}</button>
                 </div>
                 <div class="displayGroup2">
                     <label>Status</label>

@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Funcionários</title>
-    <link rel="stylesheet" href="{% static 'css/style_funcionarios.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style_funcionarios2.css' %}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="{% static 'js/tema.js' %}" defer></script>
     <script src="{% static 'js/funcionarios.js' %}" defer></script>
@@ -29,6 +29,13 @@
             <button id="toggleTheme" class="toggle-theme-btn">
                 Alternar Tema
             </button>
+
+            <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" style="padding: 8px 16px; cursor: pointer;">
+        Logout (debug)
+    </button>
+</form>
 
         </header>
 
@@ -129,15 +136,23 @@
     <div class="FuncionariosT">
         <b>Funcionários</b>
     </div>
-    <div id="searchContainer">
-        <i class="bi bi-search"></i>
-        <div class="searchBar"><input type="search" name="searchFuncionario" id="searchFuncionario"></div>
-        <button class="btnAddFuncionario" id="addFuncionario">
-            <i class="bi bi-plus-lg"></i>
-        </button>
+<form method="get" action="{% url 'funcionarios' %}">
+  <div id="searchContainer">
+    <i class="bi bi-search"></i>
+    <div class="searchBar">
+      <input type="search" name="searchFuncionario" id="searchFuncionario"
+             placeholder="Buscar por nome ou cargo"
+             value="{{ request.GET.searchFuncionario }}">
     </div>
 
+  <button type="button" class="btnAdd" id="addFuncionario">
+  <i class="bi bi-plus-lg"></i>
+</button>
+    </div>
+</form>
+
 <div class="funcionariosContainer">
+
     {% for f in funcionarios %}
 
 <div class="funcionarioSpecific">
@@ -183,9 +198,35 @@
     {% empty %}
     <p style="padding: 1rem;">Nenhum funcionário cadastrado.</p>
     {% endfor %}
-</div>
+
+  </div>
     
     </div>
+<div class="paginacao">
+  {% if page_obj.has_previous %}
+    <a href="?searchFuncionario={{ searchFuncionario }}&page={{ page_obj.previous_page_number }}" class="page-link anterior">
+      <i class="bi bi-chevron-left"></i>
+    </a>
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+    {% if num == page_obj.number %}
+      <span class="page-link active">{{ num }}</span>
+    {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+      <a href="?searchFuncionario={{ searchFuncionario }}&page={{ num }}" class="page-link">{{ num }}</a>
+    {% elif num == 1 or num == page_obj.paginator.num_pages %}
+      <a href="?searchFuncionario={{ searchFuncionario }}&page={{ num }}" class="page-link">{{ num }}</a>
+    {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+      <span class="page-link dots">...</span>
+    {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+    <a href="?searchFuncionario={{ searchFuncionario }}&page={{ page_obj.next_page_number }}" class="page-link proxima">
+      <i class="bi bi-chevron-right"></i>
+    </a>
+  {% endif %}
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -362,24 +403,6 @@ document.querySelectorAll('.formDelete').forEach(form => {
         form.submit();
       }
     });
-  });
-});
-
-// Pesquisa de funcionários
-
-document.getElementById('searchFuncionario').addEventListener('input', function () {
-  const termo = this.value.toLowerCase();
-  const funcionarios = document.querySelectorAll('.funcionarioSpecific');
-
-  funcionarios.forEach(f => {
-    const nome = f.querySelector('.funcionarioNome').textContent.toLowerCase();
-    const cargo = f.querySelector('.funcionarioFuncao').textContent.toLowerCase();
-
-    if (nome.includes(termo) || cargo.includes(termo)) {
-      f.style.display = '';
-    } else {
-      f.style.display = 'none';
-    }
   });
 });
 

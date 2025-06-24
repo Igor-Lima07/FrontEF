@@ -126,21 +126,27 @@
         <b>Produtos</b>
     </div>
     
-    <div class="produtosContainer">
-        <div >
-            <button onclick="changeDivAdd()" class="btnProduto" id="addProduto"> 
-                <i class="bi bi-plus"></i>Adicionar Produto 
-            </button>
-        </div>
-        <div>
-        <input type="text" id="searchProduto" placeholder="Pesquisar produtos..." class="searchInput">
-        </div>
+<form method="get" action="{% url 'produtos' %}">
+  <div id="searchContainer">
+    <i class="bi bi-search"></i>
+    <div class="searchBar">
+      <input type="search" name="searchProduto" id="searchProduto"
+             placeholder="Buscar por nome, categoria ou código"
+             value="{{ request.GET.searchProduto }}">
+    </div>
+</form>
+  
+
+<button type="button" class="btnAdd" id="addProduto">
+  <i class="bi bi-plus-lg"></i>
+</button>
     </div>
 
 
         <div class="addProdutoContainer" id="infoProdutoContainer">
-            <div class="displayGroup">
+            
                 {% for produto in produtos %}
+                <div class="displayGroup">
                 <form method="post" action="{% url 'delete_produto' %}" class="formDelete">
                     {% csrf_token %}
                     <input type="hidden" name="id" value="{{ produto.id }}">
@@ -395,32 +401,14 @@ document.querySelectorAll('.formDelete').forEach(form => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        // se confirmar, envia o formulário normalmente
         form.submit();
       }
     });
   });
 });
 
-document.getElementById('searchProduto').addEventListener('input', function () {
-  const termo = this.value.toLowerCase();
-  const produtos = document.querySelectorAll('.produtoItem');
-
-  produtos.forEach(item => {
-    const nome = item.querySelector('.produtoNome')?.textContent.toLowerCase() || '';
-    const categoria = item.querySelector('.produtoCategoria')?.textContent.toLowerCase() || '';
-
-    if (nome.includes(termo) || categoria.includes(termo)) {
-      item.style.display = '';
-    } else {
-      item.style.display = 'none';
-    }
-  });
-});
-
 </script>
 
-</script>
 </body>
 
 </html>

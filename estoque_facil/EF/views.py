@@ -1,13 +1,53 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import credentials
 from django.conf import settings
 from django.views.decorators.http import require_POST
+from django.contrib import messages
 import time
+from unidecode import unidecode
+from functools import wraps
+import json
+
+def login_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        print("Verificando sessão:", request.session.get('user'))
+        if 'user' not in request.session:
+            print("Sem sessão, redirecionando ao login")
+            return redirect('login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+def login_submit(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        cpf = request.POST.get('access_key')
+
+        db = initialize_firebase()
+        funcionarios_ref = db.collection('funcionarios')
+        query = funcionarios_ref.where('nome_funcionario', '==', username).where('cpf_funcionario', '==', cpf)
+        resultados = list(query.stream())
+
+        if resultados:
+           
+            request.session['user'] = {'nome': username, 'cpf': cpf}
+            print("Sessão criada:", request.session.get('user'))
+            return redirect('dashboard')  
+        else:
+            return render(request, 'login/login.html', {'error_message': 'Credenciais inválidas.'})
+    else:
+        return redirect('login')
+    
+def logout_view(request):
+    request.session.flush() 
+    return redirect('login')
 
 # Isso aqui é o que tá inicializando o firebase, NAO MEXE
+
 def initialize_firebase():
     if not firebase_admin._apps:
         cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS)
@@ -19,30 +59,43 @@ def initialize_firebase():
 def login_view(request):
     return render(request, 'login/login.html')
 
+@login_required
 def dashboard_view(request):
-    return render(request, 'dashboard/dashboard.html')
+    user = request.session.get('user')
+    return render(request, 'dashboard/dashboard.html', {'user': user})
 
+@login_required
 def produtos_view(request):
+    user = request.session.get('user')
+    return render(request, 'produtos/produtos.html', {'user': user})
 
-    return render(request, 'produtos/produtos.html')
-
+@login_required
 def funcionarios_view(request):
-    return render(request, 'funcionarios/funcionarios.html')
+    user = request.session.get('user')
+    return render(request, 'funcionarios/funcionarios.html', {'user': user})
 
+@login_required
 def estatisticas_view(request):
-    return render(request, 'estatisticas/estatisticas.html')
+    user = request.session.get('user')
+    return render(request, 'estatisticas/estatisticas.html', {'user': user})
 
+@login_required
 def historico_view(request):
-    return render(request, 'historico/historico.html')
+    user = request.session.get('user')
+    return render(request, 'historico/historico.html', {'user': user})
 
+@login_required
 def politica_view(request):
-    return render(request, 'politica/politica.html')
+    user = request.session.get('user')
+    return render(request, 'politica/politica.html', {'user': user})
 
+@login_required
 def relatorios_view(request):
-    return render(request, 'relatorios/relatorios.html')
+    user = request.session.get('user')
+    return render(request, 'relatorios/relatorios.html', {'user': user})
 
 # CRUD Produtos
-
+@login_required
 def addProdutos(request):
     if request.method == 'POST':
         db = initialize_firebase()
@@ -57,30 +110,47 @@ def addProdutos(request):
         data_val = request.POST.get('dataValProduto')
         categoria_produto = request.POST.get('categoriaProduto')
 
-        doc_ref = db.collection("produtos").document()
-        doc_ref.set({
-            "cod_produto": cod_produto,
-            "nome_produto": nome_produto,
-            "preco_produto": preco_produto,
-            "qtd_produto": qtd_produto,
-            "lote_produto": lote_produto,
-            "data_fabricacao": data_fab,
-            "data_validade": data_val,
-            "qtd_produtoPCx": qtd_produtoPCx,
-            "categoria": categoria_produto 
-        })
+        try:
+            doc_ref = db.collection("produtos").document()
+            doc_ref.set({
+                "cod_produto": cod_produto,
+                "nome_produto": nome_produto,
+                "preco_produto": preco_produto,
+                "qtd_produto": qtd_produto,
+                "lote_produto": lote_produto,
+                "data_fabricacao": data_fab,
+                "data_validade": data_val,
+                "qtd_produtoPCx": qtd_produtoPCx,
+                "categoria": categoria_produto 
+            })
 
-        print("Produto cadastrado com sucesso!")  
+            produto_novo = {
+                "id": doc_ref.id,
+                "cod_produto": cod_produto,
+                "nome_produto": nome_produto,
+                "preco_produto": preco_produto,
+                "qtd_produto": qtd_produto,
+                "lote_produto": lote_produto,
+                "data_fabricacao": data_fab,
+                "data_validade": data_val,
+                "qtd_produtoPCx": qtd_produtoPCx,
+                "categoria": categoria_produto
+            }
 
-        time.sleep(5)
+            return JsonResponse({"success": True, "produto": produto_novo})
 
-        return redirect('produtos')  
-    else:
-        return JsonResponse({"erro": "Método não permitido"}, status=405)
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"success": False, "error": "Método não permitido"}, status=405)
     
-
+@login_required
 def listProdutos_view(request):
     db = initialize_firebase()
+
+    termo = request.GET.get('searchProduto', '').strip().lower()
+    termo_sem_acentos = unidecode(termo)
+
     produtos_ref = db.collection('produtos')
     produtos = produtos_ref.stream()
 
@@ -89,9 +159,15 @@ def listProdutos_view(request):
 
     produtos_list = []
     for produto in produtos:
-        produto_data = produto.to_dict()
-        produto_data['id'] = produto.id
-        produtos_list.append(produto_data)
+        data = produto.to_dict()
+        data['id'] = produto.id
+
+        nome = unidecode(data.get('nome_produto', '').lower())
+        categoria = unidecode(data.get('categoria', '').lower())
+        codigo = unidecode(data.get('cod_produto', '').lower())
+
+        if termo_sem_acentos in nome or termo_sem_acentos in categoria or termo_sem_acentos in codigo or termo == '':
+            produtos_list.append(data)
 
     categorias_list = []
     for categoria in categorias:
@@ -101,11 +177,12 @@ def listProdutos_view(request):
 
     context = {
         'produtos': produtos_list,
-        'categorias': categorias_list
+        'categorias': categorias_list,
     }
 
     return render(request, 'produtos/produtos.html', context)
 
+@login_required
 def editar_produto(request, id):
     if request.method == 'POST':
         db = initialize_firebase()
@@ -124,7 +201,8 @@ def editar_produto(request, id):
         })
 
         return redirect('produtos')
-    
+
+@login_required    
 @require_POST
 def delete_produto(request):
     db = initialize_firebase()
@@ -141,6 +219,7 @@ def delete_produto(request):
 
 # CRUD Ações
 
+@login_required
 def addAcao(request):
     if request.method == 'POST':
         db = initialize_firebase()
@@ -165,25 +244,42 @@ def addAcao(request):
         return redirect('estabelecer_acao')
     else:
         return JsonResponse({"erro": "Método não permitido"}, status=405)
-    
+
+@login_required    
 def listAcao_view(request):
     db = initialize_firebase()
-    
-    tarefas_ref = db.collection('tarefas')
-    tarefas = tarefas_ref.stream()
-    tarefas_list = []
-    for tarefa in tarefas:
-        tarefa_data = tarefa.to_dict()
-        tarefa_data['id'] = tarefa.id
-        tarefas_list.append(tarefa_data)
+
+    termo = request.GET.get('searchAcao', '').strip().lower()
+    termo_sem_acentos = unidecode(termo)
 
     funcionarios_ref = db.collection('funcionarios')
     funcionarios = funcionarios_ref.stream()
+
+    funcionarios_dict = {}
     funcionarios_list = []
     for funcionario in funcionarios:
         func_data = funcionario.to_dict()
         func_data['id'] = funcionario.id
         funcionarios_list.append(func_data)
+        funcionarios_dict[funcionario.id] = func_data.get('nome_funcionario', 'Desconhecido')
+
+    tarefas_ref = db.collection('tarefas')
+    tarefas = tarefas_ref.stream()
+
+    tarefas_list = []
+    for tarefa in tarefas:
+        tarefa_data = tarefa.to_dict()
+        tarefa_data['id'] = tarefa.id
+
+        resp_id = tarefa_data.get('resp_acao')
+        nome_responsavel = funcionarios_dict.get(resp_id, 'Desconhecido')
+        tarefa_data['nome_responsavel'] = nome_responsavel
+
+        titulo = unidecode(tarefa_data.get('nome_acao', '').lower())
+        nome_resp = unidecode(nome_responsavel.lower())
+
+        if termo_sem_acentos in titulo or termo_sem_acentos in nome_resp or termo == '':
+            tarefas_list.append(tarefa_data)
 
     context = {
         'tarefas': tarefas_list,
@@ -192,6 +288,7 @@ def listAcao_view(request):
 
     return render(request, 'estabelecer_acao/estabelecer_acao.html', context)
 
+@login_required
 def editar_acao(request, id):
     if request.method == 'POST':
         db = initialize_firebase()
@@ -206,6 +303,7 @@ def editar_acao(request, id):
 
         return redirect('estabelecer_acao')
 
+@login_required
 @require_POST
 def delete_acao(request):
     db = initialize_firebase()
@@ -223,6 +321,7 @@ def delete_acao(request):
 
 # CRUD Funcionarios
 
+@login_required
 def addFuncionarios(request):
     if request.method == 'POST':
         db = initialize_firebase()
@@ -248,8 +347,13 @@ def addFuncionarios(request):
     else:
         return JsonResponse({"erro": "Método não permitido"}, status=405)
 
+@login_required
 def listFuncionarios_view(request):
     db = initialize_firebase()
+
+    termo = request.GET.get('searchFuncionario', '').strip().lower()
+    termo_sem_acentos = unidecode(termo)
+
     funcionarios_ref = db.collection('funcionarios')
     funcionarios = funcionarios_ref.stream()
 
@@ -257,13 +361,26 @@ def listFuncionarios_view(request):
     for funcionario in funcionarios:
         funcionario_data = funcionario.to_dict()
         funcionario_data['id'] = funcionario.id
-        funcionarios_list.append(funcionario_data)
 
-    return render(request, 'funcionarios/funcionarios.html', {'funcionarios': funcionarios_list})
+        nome = unidecode(funcionario_data.get('nome_funcionario', '').lower())
+        cargo = unidecode(funcionario_data.get('cargo_funcionario', '').lower())
+        cpf = unidecode(funcionario_data.get('cpf_funcionario', '').lower())
 
-def home(request):
-    return render(request,'funcionarios/funcionarios.html')
+        if termo_sem_acentos in nome or termo_sem_acentos in cargo or termo_sem_acentos in cpf or termo == '':
+            funcionarios_list.append(funcionario_data)
 
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(funcionarios_list, 6) 
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'funcionarios/funcionarios.html', {
+        'page_obj': page_obj,
+        'funcionarios': page_obj.object_list,
+        'paginator': paginator,
+        'searchFuncionario': termo
+    })
+
+@login_required
 def editar_funcionario(request, id):
     if request.method == 'POST':
         db = initialize_firebase()
@@ -280,7 +397,8 @@ def editar_funcionario(request, id):
         })
 
         return redirect('funcionarios')
-    
+
+@login_required
 @require_POST
 def delete_funcionario(request):
     db = initialize_firebase()
