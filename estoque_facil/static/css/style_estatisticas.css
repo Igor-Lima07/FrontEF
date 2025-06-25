@@ -11,6 +11,23 @@
     top: 0px
 }
 
+.usuarioBox {
+    text-align: left;
+    padding: 10px 5px;
+    color: var(--texto-claro);
+}
+
+.usuarioBox h1 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.usuarioCargo {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-top: 4px;
+}
+
 header{
     background-color: #ffffff;
     width: 100%;

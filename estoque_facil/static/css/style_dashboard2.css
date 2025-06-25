@@ -1,0 +1,329 @@
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+    :root {
+      --body-light: #F1F0FF;
+      --text-light: #000000;
+      --header-light: #ffffff;
+      --hover-light: #0E00AE;
+      --lines-light: #000000;
+    }
+
+    body {
+      background-color: var(--body-light);
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      margin-top: 60px; /* espaço para header */
+      transition: background-color 0.3s ease, color 0.3s ease;
+      color: var(--text-light);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: var(--header-light);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      z-index: 1000;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    header img {
+    width:135px;
+    height: 44px;
+    }
+
+    /* Ícones no header */
+    .header-icons {
+      margin-left: auto;
+      display: flex;
+      gap: 20px;
+    }
+
+    .header-icons i {
+      font-size: 32px;
+      color: var(--lines-light);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .header-icons i:hover {
+      color: var(--hover-light);
+    }
+
+    /* Menu lateral fixo */
+    .menu-lateral {
+      position: fixed;
+      top: 60px; /* abaixo do header */
+      left: 0;
+      width: 300px;
+      height: calc(100vh - 60px);
+      background-color: var(--header-light);
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      transition: width 0.3s ease;
+      z-index: 1050;
+      padding-top: 10px;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .menu-lateral.colapsado {
+      width: 60px;
+    }
+
+    .menu-lateral.colapsado .txt-link,
+    .menu-lateral.colapsado .OlaUsuario,
+    .menu-lateral.colapsado .usuarioCargo,
+    .menu-lateral.colapsado .usuarioBox,
+    .menu-lateral.colapsado .LinhasM,
+    .menu-lateral.colapsado .Edireitos {
+      display: none;
+    }
+
+    /* Botão toggle fixo */
+    #toggleMenu {
+      position: fixed;
+      left: 310px;
+      background: transparent;
+      border: none;
+      font-size: 30px;
+      color: var(--lines-light);
+      cursor: pointer;
+      z-index: 1150;
+      transition: left 0.3s ease;
+    }
+
+    .menu-lateral.colapsado ~ #toggleMenu {
+      left: 70px;
+    }
+
+    /* Lista e itens do menu */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul li.item-menu {
+      width: 265px;
+      margin-left: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    ul li.item-menu a {
+      display: flex;
+      align-items: center;
+      padding: 20px 4%;
+      font-size: 18px;
+      color: var(--lines-light);
+      text-decoration: none;
+      gap: 10px;
+    }
+
+    ul li.item-menu:hover {
+      background-color: var(--hover-light);
+    }
+
+    ul li.item-menu a:hover {
+      color: var(--header-light);
+    }
+
+    ul li.item-menu a .txt-link {
+      margin-left: 10px;
+    }
+
+    ul li.LinhasM {
+      height: 1px;
+      background-color: var(--lines-light);
+      width: 265px;
+      margin-left: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .OlaUsuario {
+      margin-top: 10px;
+      margin-left: 7px;
+      font-family: sans-serif;
+      margin-bottom: 3px;
+    }
+
+    .usuarioBox h1 {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .usuarioCargo {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-top: 4px;
+    }
+
+    .Edireitos {
+      margin-top: 260px;
+      opacity: 40%;
+      margin-left: 10px;
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+
+.DashboardT {
+    justify-content: left;
+    align-items: left;
+    display: block;
+    height: 100px;
+    text-align: left;
+    font-family: Arial;
+    font-size: 38px;
+    margin-left: 350px; /* quando menu aberto */
+    margin-top: 100px;
+    transition: margin-left 0.3s ease;
+}
+
+
+
+body.menu-colapsado .DashboardT {
+    margin-left: 80px;
+}
+
+body.menu-colapsado .graficosContainer {
+    margin-left: 80px;
+    width: 93%;
+}
+
+body.menu-colapsado .cards-container {
+    margin-left: 80px;
+}
+
+.graficosContainer {
+    display: flex;
+    width: 75%;
+    margin-left: 350px; /* quando menu aberto */
+    padding: 10px;
+    border-radius: 10px;
+    transition: margin-left 0.3s ease;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-direction: row;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#grafico1{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    width: fit-content;
+}
+
+#grafico2{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    width: fit-content;
+}
+
+#grafico3{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    width: fit-content;
+}
+
+#grafico4{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    width: fit-content;
+}
+
+#grafico5{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    width: fit-content;
+}
+
+#grafico6{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    width: fit-content;
+}
+
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px 20px;
+      margin-left: 350px; /* quando menu aberto */
+    }
+
+    .card {
+      background-color: #f1f1f1;
+      border-radius: 10px;
+      width: 250px;
+      height: 70px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .card.green {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .card.yellow {
+      background-color: #ffc107;
+      color: #212529;
+    }
+
+    .card.red {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .card h2 {
+      font-size: 30px;
+            margin: 0;
+      margin-top: 20px;
+      font-weight: bold;
+
+    }
+
+    .card p {
+      font-size: 20px;
+      margin-top: -10px;
+    }
+
+    .subContainer1 {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      height: 900px;
+      justify-content: center;
+      gap: 20px;
+      height: auto;
+    }

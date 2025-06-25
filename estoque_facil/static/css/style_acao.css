@@ -173,6 +173,24 @@ ul li.LinhasM {
     font-family: sans-serif;
     margin-bottom: 3px;
 }
+
+.usuarioBox {
+    text-align: left;
+    padding: 10px 5px;
+    color: var(--texto-claro);
+}
+
+.usuarioBox h1 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.usuarioCargo {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-top: 4px;
+}
+
 .Not{
     margin-left: 7px;  
     margin-top: 8px;
@@ -405,7 +423,9 @@ img {
     display: flex;
     flex-direction: column;
     text-align: center;
-    width: calc(15% - 1px); 
+    max-width: 250px;
+    height: auto; 
+    flex-wrap: nowrap;
 }
 
 .displayBtns {

@@ -17,6 +17,7 @@ urlpatterns = [
     path('estatisticas/', views.estatisticas_view, name='estatisticas'),
     path('historico/', views.historico_view, name='historico'),
 
+
     # CRUD Produtos
     path('addProdutos/', views.addProdutos, name='addProdutos'),
     path('delete_produto/', views.delete_produto, name='delete_produto'),
@@ -31,9 +32,12 @@ urlpatterns = [
     path('addFuncionarios/', views.addFuncionarios, name='addFuncionarios'),
     path('delete_funcionario/', views.delete_funcionario, name='delete_funcionario'),
     path('editar_funcionario/<str:id>/', views.editar_funcionario, name='editar_funcionario'),
-    
 
 
+    path('caixa/finalizar/', views.finalizar_venda, name='finalizar_venda'),
+    path('caixa/cancelar/', views.cancelar_venda, name='cancelar_venda'),
+    path('caixa/', views.caixa_view, name='caixa'),
+    path('relatorios/pdf/', views.relatorio_pdf, name='relatorio_pdf'),
 
 
 ]
