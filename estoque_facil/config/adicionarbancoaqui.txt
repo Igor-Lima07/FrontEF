@@ -1,0 +1,1 @@
+Adiciona o banco nessa pasta aqui, quer dizer, a chave do firebase, vc entendeu

@@ -358,7 +358,6 @@ document.querySelectorAll('.btnEdit').forEach(btn => {
         popup: 'modalForm' 
       },
       didOpen: () => {
-        // Seleciona a categoria após carregar o HTML
         document.querySelector('.selectCategoria').value = categoria;
       },
       preConfirm: () => {
@@ -377,7 +376,7 @@ document.querySelectorAll('.btnEdit').forEach(btn => {
 
 document.querySelectorAll('.formDelete').forEach(form => {
   form.addEventListener('submit', function(event) {
-    event.preventDefault(); // previne o submit padrão
+    event.preventDefault();
 
     Swal.fire({
       title: 'Deletar Produto?',

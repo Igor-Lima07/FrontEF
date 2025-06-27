@@ -1,3 +1,6 @@
+
+
+
 class HistoryMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -9,11 +12,11 @@ class HistoryMiddleware:
         # Adiciona o path atual, sem query string
         current_path = request.path
 
-        # Evita duplicatas consecutivas
+        # Evita duplicação
         if not history or history[-1] != current_path:
             history.append(current_path)
 
-        # Limita tamanho da lista (exemplo 20 últimos)
+        # Limita tamanho da lista pra vinte ultimas páginas acessadas (daria pra colocar uma paginação, mais fiquei com preguiça :p)
         history = history[-20:]
 
         request.session['history'] = history

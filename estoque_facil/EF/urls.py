@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
 
+    # Lógica de login ()
+
     path('login_submit/', views.login_submit, name='login_submit'),
     path('logout/', views.logout_view, name='logout'),
 
@@ -34,9 +36,13 @@ urlpatterns = [
     path('editar_funcionario/<str:id>/', views.editar_funcionario, name='editar_funcionario'),
 
 
+
+    # Lógica do caixa
     path('caixa/finalizar/', views.finalizar_venda, name='finalizar_venda'),
     path('caixa/cancelar/', views.cancelar_venda, name='cancelar_venda'),
     path('caixa/', views.caixa_view, name='caixa'),
+
+    # Rota pra geração de pdf
     path('relatorios/pdf/', views.relatorio_pdf, name='relatorio_pdf'),
 
 

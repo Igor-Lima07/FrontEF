@@ -1,3 +1,5 @@
-from django.db import models
+from django.contrib import admin
 
-# Create your models here.
+# Register your models here.
+
+# O certo seria usar modulos no django pra simular banco, como eu não sabia na epoca do TCC eu improvisei, mas use

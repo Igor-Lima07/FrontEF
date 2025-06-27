@@ -265,7 +265,7 @@ document.getElementById('addFuncionario').addEventListener('click', () => {
     },
 
 preConfirm: () => {
-  const form = Swal.getPopup().querySelector('.funcionarioForm'); // <- aqui estava o erro
+  const form = Swal.getPopup().querySelector('.funcionarioForm'); 
   if (!form.checkValidity()) {
     Swal.showValidationMessage(`Por favor, preencha todos os campos`);
     return false;
@@ -364,7 +364,7 @@ document.querySelectorAll('.btnEditFuncionario').forEach(btn => {
 
 document.querySelectorAll('.formDelete').forEach(form => {
   form.addEventListener('submit', function(event) {
-    event.preventDefault(); // previne o submit padrão
+    event.preventDefault(); 
 
     Swal.fire({
       title: 'Deletar funcionário?',

@@ -116,7 +116,6 @@
 <div class="relatorios-container">
   <h2>Relatórios Manuais</h2>
 
-  <!-- Seleção do tipo de relatório -->
   <form method="get" action="">
     <label for="tipo_relatorio">Escolha o relatório:</label>
     <select name="tipo_relatorio" id="tipo_relatorio" onchange="this.form.submit()">
@@ -133,7 +132,6 @@
     </select>
   </form>
 
-  <!-- Relatório Produtos Próximos da Validade -->
   {% if tipo_relatorio == 'produtos_proximos_validade' %}
   <form method="get" action="">
     <input type="hidden" name="tipo_relatorio" value="produtos_proximos_validade" />
@@ -142,7 +140,6 @@
     <button type="submit">Gerar</button>
   </form>
 
-  <!-- Botão Gerar PDF -->
 <form method="get" action="{% url 'relatorio_pdf' %}" target="_blank" style="display: inline;">
     <input type="hidden" name="tipo_relatorio" value="produtos_proximos_validade">
     <input type="hidden" name="dias" value="30">
@@ -174,7 +171,6 @@
   </table>
   {% endif %}
 
-  <!-- Relatório Produtos Vencidos -->
   {% if tipo_relatorio == 'produtos_vencidos' %}
   <form method="get" action="">
     <input type="hidden" name="tipo_relatorio" value="produtos_vencidos" />
@@ -187,7 +183,6 @@
     <button type="submit">Gerar</button>
   </form>
 
-  <!-- Botão Gerar PDF -->
 <form method="get" action="{% url 'relatorio_pdf' %}" target="_blank" style="display: inline;">
     <input type="hidden" name="tipo_relatorio" value="produtos_proximos_validade">
     <input type="hidden" name="dias" value="30">
@@ -219,7 +214,6 @@
   </table>
   {% endif %}
 
-  <!-- Relatório Estoque por Categoria -->
   {% if tipo_relatorio == 'estoque_categoria' %}
   <form method="get" action="">
     <input type="hidden" name="tipo_relatorio" value="estoque_categoria" />
@@ -228,7 +222,6 @@
     <button type="submit">Gerar</button>
   </form>
 
-  <!-- Botão Gerar PDF -->
 <form method="get" action="{% url 'relatorio_pdf' %}" target="_blank" style="display: inline;">
     <input type="hidden" name="tipo_relatorio" value="produtos_proximos_validade">
     <input type="hidden" name="dias" value="30">

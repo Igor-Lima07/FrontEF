@@ -300,7 +300,6 @@ document.querySelectorAll('.btnEdit').forEach(btn => {
         popup: 'modalForm'
       },
       didOpen: () => {
-        // Seleciona os valores após carregar o HTML
         document.querySelector('.selectResp').value = responsavel;
         document.querySelector('.selectUrgencia').value = urgencia;
       },
@@ -320,7 +319,7 @@ document.querySelectorAll('.btnEdit').forEach(btn => {
 
 document.querySelectorAll('.formDelete').forEach(form => {
   form.addEventListener('submit', function(event) {
-    event.preventDefault(); // previne o submit padrão
+    event.preventDefault();
 
     Swal.fire({
       title: 'Deletar Tarefa?',
@@ -336,7 +335,6 @@ document.querySelectorAll('.formDelete').forEach(form => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        // se confirmar, envia o formulário normalmente
         form.submit();
       }
     });

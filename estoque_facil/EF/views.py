@@ -1,27 +1,39 @@
+# Imports do Django (Livre kkkkkkkkkkkkk)
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
-from django.http import JsonResponse
-import firebase_admin
-from firebase_admin import firestore
-from firebase_admin import credentials
-from django.conf import settings
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
-from google.api_core.datetime_helpers import DatetimeWithNanoseconds
-import time
-import io
-import random
-import pytz
-from datetime import datetime, timedelta
-from unidecode import unidecode
-from functools import wraps
-import plotly.graph_objects as go
-import pandas as pd
-import plotly.express as px
-import json
-from collections import defaultdict
-from django.http import HttpResponse
 from django.template.loader import render_to_string
-from xhtml2pdf import pisa
+from django.conf import settings
+
+# Imports do Firebase
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+# Um import do google pra resolver um problema de conversão de timestamp
+from google.api_core.datetime_helpers import DatetimeWithNanoseconds
+
+# Imports de terceiros
+
+import pytz  # Manipulação de fusos horários (Tava salvando as datas e hora dum país aleatorio lá, ai usei pra salvar no fuso brasileiro)
+import plotly.graph_objects as go  # Usa para criar os gráficos customizados
+import plotly.express as px  # API simplificada do Plotly para criar gráficos rapidamente
+from xhtml2pdf import pisa  # Converte HTML em PDF (Tá no nome cara)
+from unidecode import unidecode  # Remove acentos/caracteres especiais (usa pra otimizar as pesquisa)
+import pandas as pd  # Biblioteca para manipulação de dados tabulares (Pros relatorios)
+
+
+# Imports do Python
+
+import time  # Funções relacionadas ao tempo tipo o time.sleep pra dar uma segurada antes de carregar a página
+import io  # Manipulação de streams
+import random  # Geração de números aleatórios (duh)
+import json  # Manipulação de dados JSON 
+from datetime import datetime, timedelta  # Manipulação de datas e horários (util pra calcular as validade)
+from functools import wraps  # Utilizado para criar decorators personalizados
+from collections import defaultdict  # Dicionário com valor padrão automático
+
+# Lógica de Login
 
 def login_required(view_func):
     @wraps(view_func)
@@ -75,10 +87,12 @@ def initialize_firebase():
         firebase_admin.initialize_app(cred)
     return firestore.client()
 
-# Caminhos das páginas
+
 
 def login_view(request):
     return render(request, 'login/login.html')
+
+# Lógica do dashboard
 
 @login_required
 def dashboard_view(request):
@@ -172,7 +186,7 @@ def dashboard_view(request):
     df_agrupado,
     names='categoria',
     values='quantidade',
-    hole=0.3,  # gráfico com "buraco" no meio
+    hole=0.3,  
 )
 
     fig_estoque.update_traces(
@@ -201,7 +215,8 @@ def dashboard_view(request):
     font=dict(size=12),
 )
 
-    # ➤ NOVO: Faturamento por Categoria (barras)
+    # Faturemento por categoria
+
     vendas_ref = db.collection('vendas').stream()
     faturamento_categoria = defaultdict(float)
     faturamento_diario = defaultdict(float)
@@ -212,7 +227,7 @@ def dashboard_view(request):
         total = data.get('total', 0)
         data_venda = data.get('data')
 
-        # Faturamento diário (para gráfico de linha)
+        # Faturamento diário
         if data_venda:
             if isinstance(data_venda, str):
                 data_venda = datetime.strptime(data_venda, "%Y-%m-%dT%H:%M:%S%z")
@@ -235,7 +250,7 @@ def dashboard_view(request):
                 categoria = prod_doc.to_dict().get('categoria', 'Sem Categoria')
                 faturamento_categoria[categoria] += qtd * preco
 
-    # ➤ Gráfico de barras - Faturamento por Categoria
+    # Gráfico de barras faturamento por categoria
     categorias = list(faturamento_categoria.keys())
     totais_cat = list(faturamento_categoria.values())
 
@@ -255,7 +270,7 @@ def dashboard_view(request):
         font=dict(size=12)
     )
 
-    # ➤ Gráfico de linha - Faturamento Diário
+    # Gráfico de linha faturamento diario
     faturamento_ordenado = sorted(faturamento_diario.items(), key=lambda x: datetime.strptime(x[0], "%d/%m"))
     dias = [x[0] for x in faturamento_ordenado]
     totais = [x[1] for x in faturamento_ordenado]
@@ -291,20 +306,7 @@ def dashboard_view(request):
         'produtos_vencidos': produtos_vencidos,
     })
 
-@login_required
-def produtos_view(request):
-    user = request.session.get('user')
-    return render(request, 'produtos/produtos.html', {'user': user})
-
-@login_required
-def funcionarios_view(request):
-    user = request.session.get('user')
-    return render(request, 'funcionarios/funcionarios.html', {'user': user})
-
-@login_required
-def estatisticas_view(request):
-    user = request.session.get('user')
-    return render(request, 'estatisticas/estatisticas.html', {'user': user})
+# Lógica da criação de historico
 
 @login_required
 def historico_view(request):
@@ -325,10 +327,14 @@ def historico_view(request):
         'user': request.session.get('user'),
     })
 
+# Carrega página de politica
+
 @login_required
 def politica_view(request):
     user = request.session.get('user')
     return render(request, 'politica/politica.html', {'user': user})
+
+# Lógica da página de relatorios
 
 def relatorios_view(request):
     user = request.session.get('user')
@@ -391,7 +397,6 @@ def relatorios_view(request):
 
         hoje = datetime.now(pytz.UTC).date()
 
-        # Parse datas ou usar defaults
         try:
             data_inicio = datetime.strptime(data_inicio_str, '%Y-%m-%d').date() if data_inicio_str else datetime(2000, 1, 1).date()
         except Exception:
@@ -475,6 +480,8 @@ def relatorios_view(request):
         })
 
     return render(request, 'relatorios/relatorios.html', contexto)
+
+# Lógica pra gerar relatorio
 
 @login_required
 def relatorio_pdf(request):
@@ -580,10 +587,11 @@ def relatorio_pdf(request):
     user = request.session.get('user', {})
     context['usuario'] = user.get('nome', 'Usuário Desconhecido')
     context['agora'] = datetime.now()
+
     # Renderiza o template para HTML
     html_string = render_to_string('relatorios/relatorio_pdf_template.html', context)
 
-    # Gera PDF usando xhtml2pdf
+    # Gera o PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename=relatorio_{tipo_relatorio}.pdf'
 
@@ -756,12 +764,12 @@ def addAcao(request):
 def listAcao_view(request):
     db = initialize_firebase()
 
-    # --- Busca funcionários para montar dicionário de nomes e lista de repositores ---
+
     funcionarios_ref = db.collection('funcionarios')
     funcionarios = funcionarios_ref.stream()
     funcionarios_dict = {}
     funcionarios_list = []
-    repositores = []  # lista nomes de repositores para atribuir tarefas
+    repositores = [] 
 
     for funcionario in funcionarios:
         func_data = funcionario.to_dict()
@@ -769,18 +777,18 @@ def listAcao_view(request):
         funcionarios_list.append(func_data)
         funcionarios_dict[funcionario.id] = func_data.get('nome_funcionario', 'Desconhecido')
 
-        # Se cargo for "repositor", adiciona na lista
+       
         cargo = func_data.get('cargo_funcionario', '').lower()
         nome_func = func_data.get('nome_funcionario', '')
         if cargo == 'repositor':
             repositores.append(nome_func)
 
-    # --- Verificar produtos perto de vencer e criar tarefas automáticas ---
+    
     produtos_ref = db.collection('produtos')
     produtos = produtos_ref.stream()
 
     hoje = datetime.now().date()
-    limite = hoje + timedelta(days=30)  # alerta para produtos vencendo em até 30 dias
+    limite = hoje + timedelta(days=30)  
 
     tarefas_ref = db.collection('tarefas')
     tarefas = list(tarefas_ref.stream())
@@ -798,7 +806,7 @@ def listAcao_view(request):
         if not data_validade_raw:
             continue
 
-        # Converter para datetime.date corretamente
+        # Converter para datetime.date corretamente (o sofrimento aconteceu aqui, nunca esquecer)
         if isinstance(data_validade_raw, str):
             try:
                 data_validade = datetime.strptime(data_validade_raw, "%Y-%m-%d").date()
@@ -829,7 +837,6 @@ def listAcao_view(request):
             else:
                 print(f"Tarefa para produto {produto_data.get('nome_produto')} já existe, ignorando.")
 
-    # --- Filtrar e montar lista de tarefas para renderizar ---
     termo = request.GET.get('searchAcao', '').strip().lower()
     termo_sem_acentos = unidecode(termo)
 
@@ -842,7 +849,7 @@ def listAcao_view(request):
         tarefa_data['id'] = tarefa.id
 
         resp_id = tarefa_data.get('resp_acao')
-        nome_responsavel = resp_id if resp_id else 'Desconhecido'  # Como agora é nome, usamos direto
+        nome_responsavel = resp_id if resp_id else 'Desconhecido'
         tarefa_data['nome_responsavel'] = nome_responsavel
 
         titulo = unidecode(tarefa_data.get('nome_acao', '').lower())
@@ -987,12 +994,12 @@ def delete_funcionario(request):
     return redirect('funcionarios')
     
 
+# Lógica pra gerar msm o historico
 
 def NavigationHistoryMiddleware(get_response):
     def middleware(request):
         response = get_response(request)
 
-        # Ignorar caminhos estáticos ou ajax
         if request.path.startswith('/static') or request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return response
 
@@ -1008,25 +1015,25 @@ def NavigationHistoryMiddleware(get_response):
 
     return middleware
 
+# Lógica do carrinho e do caixaaaaa
+
 @login_required
 def caixa_view(request):
     db = initialize_firebase()
 
-    # Recupera o carrinho da sessão (lista de dicts)
     carrinho = request.session.get('carrinho', [])
 
     if request.method == 'POST':
-        codigo = request.POST.get('codigo_produto')  # campo do input no HTML
+        codigo = request.POST.get('codigo_produto')  
 
         if codigo:
-            # Buscar pelo campo correto: "cod_produto"
+            
             produtos_ref = db.collection('produtos').where('cod_produto', '==', codigo).limit(1).stream()
             produto_doc = next(produtos_ref, None)
 
             if produto_doc:
                 produto_data = produto_doc.to_dict()
 
-                # Verifica se o produto já está no carrinho
                 encontrado = False
                 for item in carrinho:
                     if item['codigo'] == codigo:
@@ -1047,7 +1054,6 @@ def caixa_view(request):
                 request.session['carrinho'] = carrinho
                 return redirect('caixa')
 
-    # Calcula total
     total = round(sum(item['subtotal'] for item in carrinho), 2)
 
     return render(request, 'caixa/caixa.html', {
@@ -1063,14 +1069,12 @@ def finalizar_venda(request):
     if carrinho:
         total = sum(item['preco'] * item['qtd'] for item in carrinho)
 
-        # Salva a venda
         db.collection('vendas').add({
         'itens': carrinho,
         'total': total,
         'data': datetime.now(pytz.timezone('America/Sao_Paulo'))  # <- Aqui!
         })
 
-        # Atualiza o estoque dos produtos vendidos
         for item in carrinho:
             codigo = item['codigo']
             qtd_vendida = item['qtd']
@@ -1083,11 +1087,10 @@ def finalizar_venda(request):
                 produto_data = produto_doc.to_dict()
                 qtd_atual = produto_data.get('qtd_total', 0)
 
-                nova_qtd = max(qtd_atual - qtd_vendida, 0)  # evita estoque negativo
+                nova_qtd = max(qtd_atual - qtd_vendida, 0) 
 
                 produto_ref.update({'qtd_total': nova_qtd})
 
-        # Limpa o carrinho após finalizar
         request.session['carrinho'] = []
 
     return redirect('caixa')
